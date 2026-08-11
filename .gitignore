@@ -39,5 +39,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# vercel local link metadata
+# host local link metadata
 .vercel
+.netlify

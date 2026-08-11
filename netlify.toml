@@ -1,0 +1,9 @@
+# Next.js on Netlify — OpenNext adapter is applied automatically.
+# Do not pin @netlify/plugin-nextjs unless you need a fixed version.
+# Set secrets in Netlify UI only (Site settings → Environment variables). Never commit real env files.
+
+[build]
+  command = "npm run build"
+
+[build.environment]
+  NODE_VERSION = "20"
