@@ -28,12 +28,16 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files
+# env files — commit samples only; never commit real env values
+.env
+.env.*
+!.env.sample
+!.env.production.sample
 .env*.local
 
 # typescript
 *.tsbuildinfo
 next-env.d.ts
 
-# vercel
+# vercel local link metadata
 .vercel
