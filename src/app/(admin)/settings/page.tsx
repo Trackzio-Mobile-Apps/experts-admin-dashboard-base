@@ -7,12 +7,22 @@ import { Button } from "@/components/ui/Button";
 import { Card, PageHeader } from "@/components/ui/Card";
 import { Input } from "@/components/ui/Input";
 import { useToast } from "@/components/ui/Toast";
-import { useState } from "react";
+import { isValidEmail } from "@/lib/period";
+import {
+  getSavedReportRecipient,
+  saveReportRecipient,
+} from "@/lib/report-settings";
+import { useEffect, useState } from "react";
 
 export default function SettingsPage() {
   const logout = useLogout();
   const { showToast } = useToast();
   const [apiKey, setApiKeyInput] = useState(getAdminKey() ?? "");
+  const [reportEmail, setReportEmail] = useState("");
+
+  useEffect(() => {
+    setReportEmail(getSavedReportRecipient());
+  }, []);
 
   const handleUpdateKey = () => {
     const trimmed = apiKey.trim();
@@ -79,6 +89,35 @@ export default function SettingsPage() {
           </div>
         </Card>
       </div>
+
+      <Card title="Weekly & monthly report email" className="mt-6">
+        <p className="mb-4 text-sm text-text-muted">
+          Inbox for Send now from Reports. Automatic Monday/monthly emails
+          also need the Netlify env vars listed on the Reports page.
+        </p>
+        <div className="space-y-4">
+          <Input
+            label="Report email"
+            type="email"
+            value={reportEmail}
+            onChange={(e) => setReportEmail(e.target.value)}
+            placeholder="ops@example.com"
+          />
+          <Button
+            onClick={() => {
+              const trimmed = reportEmail.trim();
+              if (!isValidEmail(trimmed)) {
+                showToast("Enter a valid report email address", "error");
+                return;
+              }
+              saveReportRecipient(trimmed);
+              showToast("Report email saved on this device", "success");
+            }}
+          >
+            Save report email
+          </Button>
+        </div>
+      </Card>
     </>
   );
 }

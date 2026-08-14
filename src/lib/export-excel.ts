@@ -1,6 +1,7 @@
 import * as XLSX from "xlsx";
 import type { Expert, User } from "@/types/admin-api";
 import { completionRate } from "@/lib/expert-metrics";
+import type { PeriodReport } from "@/lib/period-report";
 import {
   completionRateForUser,
   displayUserLabel,
@@ -126,4 +127,59 @@ export function downloadExpertsExcel(experts: Expert[], filenamePrefix = "expert
 export function downloadUsersExcel(users: User[], filenamePrefix = "users") {
   const rows = users.map(userToExportRow);
   downloadWorkbook("Users", rows, `${filenamePrefix}-${stamp()}.xlsx`);
+}
+
+export function downloadPeriodReportExcel(report: PeriodReport) {
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(
+    workbook,
+    XLSX.utils.json_to_sheet([
+      {
+        Period: report.periodLabel,
+        Range: report.rangeLabel,
+        "Users who requested": report.summary.usersWhoRequested,
+        "Requests created": report.summary.requestsCreated,
+        "Requests completed": report.summary.requestsCompleted,
+        "Experts who completed": report.summary.expertsWhoCompleted,
+        "Missed deadlines": report.summary.missedDeadlines,
+        "Admin-created requests": report.summary.adminCreated,
+        Generated: report.generatedAt,
+      },
+    ]),
+    "Summary",
+  );
+  XLSX.utils.book_append_sheet(
+    workbook,
+    XLSX.utils.json_to_sheet(
+      report.users.map((row) => ({
+        Name: row.name,
+        Email: row.email ?? "",
+        "Requests created": row.requestsCreated,
+        "Requests completed": row.requestsCompleted,
+        "Missed deadlines": row.missedDeadlines,
+        "Admin-created": row.adminCreated,
+        "Last request": row.lastRequestAt ?? "",
+        "Mongo ID": row.userId,
+      })),
+    ),
+    "Users who requested",
+  );
+  XLSX.utils.book_append_sheet(
+    workbook,
+    XLSX.utils.json_to_sheet(
+      report.experts.map((row) => ({
+        Name: row.name,
+        Email: row.email,
+        Completed: row.completed,
+        "Missed deadlines": row.missedDeadlines,
+        "Avg completion hours": row.avgCompletionHours ?? "",
+        "Mongo ID": row.expertId,
+      })),
+    ),
+    "Experts who completed",
+  );
+  XLSX.writeFile(
+    workbook,
+    `coinzy-${report.periodKey}-report-${stamp()}.xlsx`,
+  );
 }
