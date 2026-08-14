@@ -1,6 +1,7 @@
 "use client";
 
 import { useAdminKey } from "@/components/layout/AdminAuthGuard";
+import { useApp } from "@/components/layout/AppProvider";
 import { ReportEmailPanel } from "@/components/reports/ReportEmailPanel";
 import { ReportSummary } from "@/components/reports/ReportSummary";
 import {
@@ -28,6 +29,7 @@ import { useEffect, useMemo, useState } from "react";
 
 export default function ReportsPage() {
   const adminKey = useAdminKey();
+  const { app } = useApp();
   const handleApiError = useApiHandler();
   const { showToast } = useToast();
   const [period, setPeriod] = useState<ReportPeriodKey>("this_month");
@@ -79,7 +81,7 @@ export default function ReportsPage() {
     <>
       <PageHeader
         title="Reports"
-        description="Weekly and monthly stats for users who requested evaluations and experts who completed them."
+        description={`${app.name} stats for users who requested evaluations and experts who completed them.`}
         action={
           <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-end">
             <Select

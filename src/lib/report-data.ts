@@ -32,10 +32,11 @@ async function mapPool<T, R>(
 export async function loadReportSourceData(
   adminKey: string,
   onProgress?: (done: number, total: number) => void,
+  opts?: { baseUrl?: string },
 ): Promise<ReportSourceData> {
   const [users, experts] = await Promise.all([
-    listUsers(adminKey),
-    listExperts(adminKey),
+    listUsers(adminKey, undefined, opts),
+    listExperts(adminKey, opts),
   ]);
 
   const withRequests = users.filter(
@@ -52,7 +53,7 @@ export async function loadReportSourceData(
 
   await mapPool(withRequests, FETCH_CONCURRENCY, async (user: User) => {
     try {
-      const detail = await getUser(adminKey, user._id);
+      const detail = await getUser(adminKey, user._id, opts);
       requestsByUserId[user._id] = detail.requests;
     } catch {
       requestsByUserId[user._id] = [];

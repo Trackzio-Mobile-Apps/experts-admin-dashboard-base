@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Providers } from "./providers";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -14,10 +15,10 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Coinzy Experts Admin",
-    template: "%s | Coinzy Experts Admin",
+    default: "Experts Admin",
+    template: "%s | Experts Admin",
   },
-  description: "Admin portal for Coinzy Experts platform management.",
+  description: "Admin portal for Trackzio expert apps.",
 };
 
 export default function RootLayout({
@@ -30,7 +31,9 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="h-full min-h-dvh font-sans">{children}</body>
+      <body className="h-full min-h-dvh font-sans">
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }

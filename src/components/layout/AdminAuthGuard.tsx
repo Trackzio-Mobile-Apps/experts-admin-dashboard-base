@@ -1,5 +1,6 @@
 "use client";
 
+import { useApp } from "@/components/layout/AppProvider";
 import { clearAdminKey, getAdminKey, hasAdminKey } from "@/lib/auth";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
@@ -7,11 +8,12 @@ import { useEffect, useState, type ReactNode } from "react";
 export function AdminAuthGuard({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
+  const { app } = useApp();
   const isLogin = pathname === "/login";
   const [checked, setChecked] = useState(false);
 
   useEffect(() => {
-    const authed = hasAdminKey();
+    const authed = hasAdminKey(app.id);
 
     if (!authed && !isLogin) {
       router.replace("/login");
@@ -24,7 +26,7 @@ export function AdminAuthGuard({ children }: { children: ReactNode }) {
     }
 
     queueMicrotask(() => setChecked(true));
-  }, [isLogin, pathname, router]);
+  }, [app.id, isLogin, pathname, router]);
 
   if (!checked) {
     return (
@@ -38,13 +40,15 @@ export function AdminAuthGuard({ children }: { children: ReactNode }) {
 }
 
 export function useAdminKey() {
-  return getAdminKey() ?? "";
+  const { app } = useApp();
+  return getAdminKey(app.id) ?? "";
 }
 
 export function useLogout() {
   const router = useRouter();
+  const { app } = useApp();
   return () => {
-    clearAdminKey();
+    clearAdminKey(app.id);
     router.push("/login");
   };
 }

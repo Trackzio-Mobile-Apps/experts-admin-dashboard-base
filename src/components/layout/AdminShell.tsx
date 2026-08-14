@@ -1,6 +1,8 @@
 "use client";
 
 import { useLogout } from "@/components/layout/AdminAuthGuard";
+import { useApp } from "@/components/layout/AppProvider";
+import { AppMark, AppSwitcher } from "@/components/layout/AppSwitcher";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useId, useState, type ReactNode } from "react";
@@ -14,6 +16,7 @@ const NAV: {
   { href: "/experts", label: "Experts", icon: "experts" },
   { href: "/users", label: "Users", icon: "users" },
   { href: "/reports", label: "Reports", icon: "reports" },
+  { href: "/compare", label: "Compare", icon: "compare" },
   { href: "/allocation", label: "Allocation", icon: "allocation" },
   { href: "/refunds", label: "Refunds", icon: "refunds" },
   { href: "/requests", label: "Requests", icon: "requests", comingSoon: true },
@@ -54,6 +57,12 @@ function NavIcon({ kind }: { kind: string }) {
           <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z" />
         </svg>
       );
+    case "compare":
+      return (
+        <svg className={cls} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25a2.25 2.25 0 01-2.25-2.25v-2.25z" />
+        </svg>
+      );
     case "requests":
       return (
         <svg className={cls} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
@@ -71,14 +80,13 @@ function NavIcon({ kind }: { kind: string }) {
 }
 
 function SidebarLogo() {
+  const { app } = useApp();
   return (
     <div className="flex items-center gap-3">
-      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary text-lg font-bold text-white shadow-sm">
-        C
-      </div>
+      <AppMark icon={app.icon} color={app.primary} />
       <div className="min-w-0 leading-tight">
         <p className="text-sm font-semibold tracking-tight text-expert-sidebar-foreground">
-          Coinzy
+          {app.name}
         </p>
         <p className="mt-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-expert-sidebar-muted">
           Admin portal
@@ -95,11 +103,27 @@ type NavInnerProps = {
 
 function NavInner({ onNavigate, onLogout }: NavInnerProps) {
   const pathname = usePathname();
+  const { app } = useApp();
 
   return (
     <div className="flex h-full min-h-0 flex-col">
-      <div className="shrink-0 pb-6">
+      <div className="shrink-0 pb-4">
         <SidebarLogo />
+        {app.models.length > 0 ? (
+          <div className="mt-3 flex flex-wrap gap-1">
+            {app.models.map((model) => (
+              <span
+                key={model}
+                className="rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-medium text-expert-sidebar-foreground"
+              >
+                {model}
+              </span>
+            ))}
+          </div>
+        ) : null}
+        <div className="mt-4">
+          <AppSwitcher />
+        </div>
       </div>
 
       <nav
@@ -172,6 +196,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const menuId = useId();
   const logout = useLogout();
+  const { app } = useApp();
 
   const closeMenu = useCallback(() => setMenuOpen(false), []);
 
@@ -253,7 +278,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
       {/* Main content — only this area scrolls */}
       <div className="flex min-h-0 min-w-0 flex-1 flex-col lg:pl-64">
         <main className="min-h-0 flex-1 overflow-x-hidden overflow-y-auto overscroll-contain">
-          <div className="mx-auto w-full max-w-7xl px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-8">
+          <div key={app.id} className="mx-auto w-full max-w-7xl px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-8">
             {children}
           </div>
         </main>

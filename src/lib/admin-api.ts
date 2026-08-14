@@ -15,14 +15,14 @@ import type {
   AdminUserRequest,
 } from "@/types/admin-api";
 
-function withKey(adminKey: string) {
-  return { adminKey };
+function withKey(adminKey: string, opts?: { baseUrl?: string }) {
+  return { adminKey, baseUrl: opts?.baseUrl };
 }
 
-export async function listExperts(adminKey: string) {
+export async function listExperts(adminKey: string, opts?: { baseUrl?: string }) {
   const res = await adminFetch<{ experts: Expert[] }>(
     "/admin/experts",
-    { method: "GET", ...withKey(adminKey) },
+    { method: "GET", ...withKey(adminKey, opts) },
   );
   return res.data.experts;
 }
@@ -79,21 +79,29 @@ export async function updateExpertStatus(
   return res.data.expert;
 }
 
-export async function listUsers(adminKey: string, email?: string) {
+export async function listUsers(
+  adminKey: string,
+  email?: string,
+  opts?: { baseUrl?: string },
+) {
   const query = email?.trim() ? `?email=${encodeURIComponent(email.trim())}` : "";
   const res = await adminFetch<{ users: User[] }>(
     `/admin/users${query}`,
-    { method: "GET", ...withKey(adminKey) },
+    { method: "GET", ...withKey(adminKey, opts) },
   );
   return res.data.users;
 }
 
-export async function getUser(adminKey: string, userId: string) {
+export async function getUser(
+  adminKey: string,
+  userId: string,
+  opts?: { baseUrl?: string },
+) {
   const res = await adminFetch<{
     user: User;
     stats: UserRequestStats;
     requests?: AdminUserRequest[];
-  }>(`/admin/users/${userId}`, { method: "GET", ...withKey(adminKey) });
+  }>(`/admin/users/${userId}`, { method: "GET", ...withKey(adminKey, opts) });
   return {
     user: res.data.user,
     stats: res.data.stats,

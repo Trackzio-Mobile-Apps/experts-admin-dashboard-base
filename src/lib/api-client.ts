@@ -1,3 +1,4 @@
+import { defaultApiBaseUrl, getAppById, getStoredActiveAppId } from "@/lib/apps";
 import type { ApiEnvelope } from "@/types/admin-api";
 
 export class AdminApiError extends Error {
@@ -10,17 +11,25 @@ export class AdminApiError extends Error {
   }
 }
 
-export function getApiBaseUrl(): string {
-  return process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://coinzy-experts-api.trackzio.com";
+export function getApiBaseUrl(explicit?: string): string {
+  if (explicit?.trim()) return explicit.trim().replace(/\/$/, "");
+  if (typeof window !== "undefined") {
+    const activeId = getStoredActiveAppId();
+    if (activeId) {
+      const app = getAppById(activeId);
+      if (app.apiBaseUrl) return app.apiBaseUrl.replace(/\/$/, "");
+    }
+  }
+  return defaultApiBaseUrl().replace(/\/$/, "");
 }
 
 export async function adminFetch<T>(
   path: string,
-  options: RequestInit & { adminKey: string },
+  options: RequestInit & { adminKey: string; baseUrl?: string },
 ): Promise<ApiEnvelope<T>> {
-  const { adminKey, ...fetchOptions } = options;
+  const { adminKey, baseUrl, ...fetchOptions } = options;
 
-  const res = await fetch(`${getApiBaseUrl()}${path}`, {
+  const res = await fetch(`${getApiBaseUrl(baseUrl)}${path}`, {
     ...fetchOptions,
     headers: {
       "Content-Type": "application/json",
