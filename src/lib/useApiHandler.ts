@@ -5,6 +5,7 @@ import { clearAdminKey } from "@/lib/auth";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 
+/** Shared API error handler: expired/invalid keys kick the operator back to login. */
 export function useApiHandler() {
   const router = useRouter();
 

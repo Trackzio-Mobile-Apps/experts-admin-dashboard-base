@@ -5,6 +5,7 @@ import type { AdminUserRequest, User } from "@/types/admin-api";
 
 const FETCH_CONCURRENCY = 6;
 
+/** Run async work over `items` with a fixed worker pool. Preserves input order. */
 async function mapPool<T, R>(
   items: T[],
   concurrency: number,
@@ -29,14 +30,17 @@ async function mapPool<T, R>(
   return results;
 }
 
+/**
+ * Loads users, experts, and per-user request history for period reports.
+ * User detail fetches run in a small pool so we do not stampede the API.
+ */
 export async function loadReportSourceData(
   adminKey: string,
   onProgress?: (done: number, total: number) => void,
-  opts?: { baseUrl?: string },
 ): Promise<ReportSourceData> {
   const [users, experts] = await Promise.all([
-    listUsers(adminKey, undefined, opts),
-    listExperts(adminKey, opts),
+    listUsers(adminKey),
+    listExperts(adminKey),
   ]);
 
   const withRequests = users.filter(
@@ -53,7 +57,7 @@ export async function loadReportSourceData(
 
   await mapPool(withRequests, FETCH_CONCURRENCY, async (user: User) => {
     try {
-      const detail = await getUser(adminKey, user._id, opts);
+      const detail = await getUser(adminKey, user._id);
       requestsByUserId[user._id] = detail.requests;
     } catch {
       requestsByUserId[user._id] = [];

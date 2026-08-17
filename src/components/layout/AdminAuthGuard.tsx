@@ -1,19 +1,21 @@
 "use client";
 
-import { useApp } from "@/components/layout/AppProvider";
 import { clearAdminKey, getAdminKey, hasAdminKey } from "@/lib/auth";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
 
+/**
+ * Client-side gate: send unauthenticated users to /login.
+ * The API key lives in sessionStorage, so this check must run in the browser.
+ */
 export function AdminAuthGuard({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { app } = useApp();
   const isLogin = pathname === "/login";
   const [checked, setChecked] = useState(false);
 
   useEffect(() => {
-    const authed = hasAdminKey(app.id);
+    const authed = hasAdminKey();
 
     if (!authed && !isLogin) {
       router.replace("/login");
@@ -26,7 +28,7 @@ export function AdminAuthGuard({ children }: { children: ReactNode }) {
     }
 
     queueMicrotask(() => setChecked(true));
-  }, [app.id, isLogin, pathname, router]);
+  }, [isLogin, pathname, router]);
 
   if (!checked) {
     return (
@@ -40,15 +42,13 @@ export function AdminAuthGuard({ children }: { children: ReactNode }) {
 }
 
 export function useAdminKey() {
-  const { app } = useApp();
-  return getAdminKey(app.id) ?? "";
+  return getAdminKey() ?? "";
 }
 
 export function useLogout() {
   const router = useRouter();
-  const { app } = useApp();
   return () => {
-    clearAdminKey(app.id);
+    clearAdminKey();
     router.push("/login");
   };
 }

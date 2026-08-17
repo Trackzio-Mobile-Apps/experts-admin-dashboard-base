@@ -1,4 +1,4 @@
-import { defaultApiBaseUrl, getAppById, getStoredActiveAppId } from "@/lib/apps";
+import { defaultApiBaseUrl } from "@/lib/apps";
 import type { ApiEnvelope } from "@/types/admin-api";
 
 export class AdminApiError extends Error {
@@ -11,25 +11,23 @@ export class AdminApiError extends Error {
   }
 }
 
-export function getApiBaseUrl(explicit?: string): string {
-  if (explicit?.trim()) return explicit.trim().replace(/\/$/, "");
-  if (typeof window !== "undefined") {
-    const activeId = getStoredActiveAppId();
-    if (activeId) {
-      const app = getAppById(activeId);
-      if (app.apiBaseUrl) return app.apiBaseUrl.replace(/\/$/, "");
-    }
-  }
+/** Trailing slash stripped so callers can pass `/admin/...` paths. */
+export function getApiBaseUrl(): string {
   return defaultApiBaseUrl().replace(/\/$/, "");
 }
 
+/**
+ * Authenticated fetch for the Coinzy experts admin API.
+ * Every request sends `x-admin-key`. Throws {@link AdminApiError} on 401/403
+ * or when the envelope has `error: true`.
+ */
 export async function adminFetch<T>(
   path: string,
-  options: RequestInit & { adminKey: string; baseUrl?: string },
+  options: RequestInit & { adminKey: string },
 ): Promise<ApiEnvelope<T>> {
-  const { adminKey, baseUrl, ...fetchOptions } = options;
+  const { adminKey, ...fetchOptions } = options;
 
-  const res = await fetch(`${getApiBaseUrl(baseUrl)}${path}`, {
+  const res = await fetch(`${getApiBaseUrl()}${path}`, {
     ...fetchOptions,
     headers: {
       "Content-Type": "application/json",

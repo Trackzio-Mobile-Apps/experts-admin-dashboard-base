@@ -1,5 +1,10 @@
 import type { CreateExpertBody, UpdateExpertBody } from "@/types/admin-api";
 
+/**
+ * Form helpers for create/update expert. Keep payload shaping here so pages
+ * stay UI-only and the backend never receives empty optional strings.
+ */
+
 export const ONE_LINE_DESCRIPTION_MAX = 200;
 
 /** Backend rejects empty/null optional profile strings — omit them instead. */

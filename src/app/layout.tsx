@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     default: "Experts Admin",
     template: "%s | Experts Admin",
   },
-  description: "Admin portal for Trackzio expert apps.",
+  description: "Admin portal for Coinzy experts.",
 };
 
 export default function RootLayout({

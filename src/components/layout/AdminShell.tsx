@@ -1,12 +1,13 @@
 "use client";
 
 import { useLogout } from "@/components/layout/AdminAuthGuard";
+import { AppMark } from "@/components/layout/AppMark";
 import { useApp } from "@/components/layout/AppProvider";
-import { AppMark, AppSwitcher } from "@/components/layout/AppSwitcher";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useId, useState, type ReactNode } from "react";
 
+/** Primary sidebar destinations for the Coinzy admin portal. */
 const NAV: {
   href: string;
   label: string;
@@ -16,7 +17,6 @@ const NAV: {
   { href: "/experts", label: "Experts", icon: "experts" },
   { href: "/users", label: "Users", icon: "users" },
   { href: "/reports", label: "Reports", icon: "reports" },
-  { href: "/compare", label: "Compare", icon: "compare" },
   { href: "/allocation", label: "Allocation", icon: "allocation" },
   { href: "/refunds", label: "Refunds", icon: "refunds" },
   { href: "/requests", label: "Requests", icon: "requests", comingSoon: true },
@@ -55,12 +55,6 @@ function NavIcon({ kind }: { kind: string }) {
         <svg className={cls} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z" />
           <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z" />
-        </svg>
-      );
-    case "compare":
-      return (
-        <svg className={cls} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25a2.25 2.25 0 01-2.25-2.25v-2.25z" />
         </svg>
       );
     case "requests":
@@ -121,9 +115,6 @@ function NavInner({ onNavigate, onLogout }: NavInnerProps) {
             ))}
           </div>
         ) : null}
-        <div className="mt-4">
-          <AppSwitcher />
-        </div>
       </div>
 
       <nav
@@ -196,7 +187,6 @@ export function AdminShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const menuId = useId();
   const logout = useLogout();
-  const { app } = useApp();
 
   const closeMenu = useCallback(() => setMenuOpen(false), []);
 
@@ -278,7 +268,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
       {/* Main content — only this area scrolls */}
       <div className="flex min-h-0 min-w-0 flex-1 flex-col lg:pl-64">
         <main className="min-h-0 flex-1 overflow-x-hidden overflow-y-auto overscroll-contain">
-          <div key={app.id} className="mx-auto w-full max-w-7xl px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-8">
+          <div className="mx-auto w-full max-w-7xl px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-8">
             {children}
           </div>
         </main>

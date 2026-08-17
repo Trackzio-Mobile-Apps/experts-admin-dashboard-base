@@ -1,3 +1,5 @@
+/** Hex helpers used to derive hover / sidebar tokens from the Coinzy brand color. */
+
 export function normalizeHex(hex: string, fallback = "#7c3c3f"): string {
   let value = hex.trim().replace("#", "");
   if (value.length === 3) {

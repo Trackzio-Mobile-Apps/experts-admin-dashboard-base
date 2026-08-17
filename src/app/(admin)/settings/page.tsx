@@ -2,7 +2,6 @@
 
 import { useLogout } from "@/components/layout/AdminAuthGuard";
 import { useApp } from "@/components/layout/AppProvider";
-import { AppsManager } from "@/components/apps/AppsManager";
 import { getApiBaseUrl } from "@/lib/api-client";
 import { getAdminKey, setAdminKey } from "@/lib/auth";
 import { Button } from "@/components/ui/Button";
@@ -24,9 +23,9 @@ export default function SettingsPage() {
   const [reportEmail, setReportEmail] = useState("");
 
   useEffect(() => {
-    setApiKeyInput(getAdminKey(app.id) ?? "");
+    setApiKeyInput(getAdminKey() ?? "");
     setReportEmail(getSavedReportRecipient());
-  }, [app.id]);
+  }, []);
 
   const handleUpdateKey = () => {
     const trimmed = apiKey.trim();
@@ -34,19 +33,15 @@ export default function SettingsPage() {
       showToast("API key cannot be empty", "error");
       return;
     }
-    setAdminKey(trimmed, app.id);
-    showToast(`API key updated for ${app.name}`, "success");
-  };
-
-  const handleClearKey = () => {
-    logout();
+    setAdminKey(trimmed);
+    showToast("API key updated for this session", "success");
   };
 
   return (
     <>
       <PageHeader
         title="Settings"
-        description="Session, apps, and connection configuration."
+        description="Session and connection configuration."
       />
 
       <div className="grid gap-6 lg:grid-cols-2">
@@ -54,11 +49,9 @@ export default function SettingsPage() {
           <dl className="mb-4 space-y-3 text-sm">
             <div>
               <dt className="text-text-muted">Base URL</dt>
-              <dd className="mt-0.5 font-mono text-xs">{app.apiBaseUrl || getApiBaseUrl()}</dd>
-            </div>
-            <div>
-              <dt className="text-text-muted">Active app</dt>
-              <dd className="mt-0.5 text-sm">{app.name}</dd>
+              <dd className="mt-0.5 font-mono text-xs">
+                {app.apiBaseUrl || getApiBaseUrl()}
+              </dd>
             </div>
             <div>
               <dt className="text-text-muted">Auth header</dt>
@@ -76,8 +69,7 @@ export default function SettingsPage() {
 
         <Card title="Admin API key">
           <p className="mb-4 text-sm text-text-muted">
-            Update the key used for {app.name} in this browser session.
-            Each app keeps its own key.
+            Update the key used for this browser session.
           </p>
           <div className="space-y-4">
             <Input
@@ -89,16 +81,12 @@ export default function SettingsPage() {
             />
             <div className="flex flex-col gap-2 sm:flex-row">
               <Button onClick={handleUpdateKey}>Update key</Button>
-              <Button variant="danger" onClick={handleClearKey}>
+              <Button variant="danger" onClick={logout}>
                 Sign out
               </Button>
             </div>
           </div>
         </Card>
-      </div>
-
-      <div className="mt-6">
-        <AppsManager onToast={showToast} />
       </div>
 
       <Card title="Weekly & monthly report email" className="mt-6">

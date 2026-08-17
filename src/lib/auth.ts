@@ -1,50 +1,40 @@
-import { defaultCoinzyApp, getStoredActiveAppId, listApps } from "@/lib/apps";
+/**
+ * Browser session for the Coinzy admin API key.
+ *
+ * The key lives in sessionStorage (cleared when the tab closes). Operators
+ * enter it on the login page — it is never baked into the build.
+ *
+ * `admin_api_key:coinzy` is the storage id from the previous multi-app build.
+ * We still read and clear it so existing sessions are not logged out.
+ */
+const SESSION_KEY = "coinzy_admin_api_key";
+const LEGACY_PER_APP_KEY = "admin_api_key:coinzy";
 
-const LEGACY_KEY = "coinzy_admin_api_key";
-const KEY_PREFIX = "admin_api_key:";
-
-export function getActiveAppId(): string {
-  return getStoredActiveAppId() ?? listApps()[0]?.id ?? defaultCoinzyApp().id;
+function sessionKeys(): string[] {
+  return [SESSION_KEY, LEGACY_PER_APP_KEY];
 }
 
-export function adminKeyStorageId(appId: string): string {
-  return `${KEY_PREFIX}${appId}`;
-}
-
-export function getAdminKey(appId: string = getActiveAppId()): string | null {
+export function getAdminKey(): string | null {
   if (typeof window === "undefined") return null;
-  const keyed = sessionStorage.getItem(adminKeyStorageId(appId));
-  if (keyed) return keyed;
-  if (appId === "coinzy") return sessionStorage.getItem(LEGACY_KEY);
+  for (const key of sessionKeys()) {
+    const value = sessionStorage.getItem(key);
+    if (value) return value;
+  }
   return null;
 }
 
-export function setAdminKey(key: string, appId: string = getActiveAppId()): void {
-  sessionStorage.setItem(adminKeyStorageId(appId), key);
-  if (appId === "coinzy") {
-    sessionStorage.setItem(LEGACY_KEY, key);
-  }
+export function setAdminKey(key: string): void {
+  sessionStorage.setItem(SESSION_KEY, key);
+  sessionStorage.removeItem(LEGACY_PER_APP_KEY);
 }
 
-export function clearAdminKey(appId: string = getActiveAppId()): void {
-  sessionStorage.removeItem(adminKeyStorageId(appId));
-  if (appId === "coinzy") {
-    sessionStorage.removeItem(LEGACY_KEY);
-  }
-}
-
-export function clearAllAdminKeys(): void {
+export function clearAdminKey(): void {
   if (typeof window === "undefined") return;
-  const toRemove: string[] = [];
-  for (let i = 0; i < sessionStorage.length; i += 1) {
-    const key = sessionStorage.key(i);
-    if (key && (key.startsWith(KEY_PREFIX) || key === LEGACY_KEY)) {
-      toRemove.push(key);
-    }
+  for (const key of sessionKeys()) {
+    sessionStorage.removeItem(key);
   }
-  for (const key of toRemove) sessionStorage.removeItem(key);
 }
 
-export function hasAdminKey(appId: string = getActiveAppId()): boolean {
-  return Boolean(getAdminKey(appId)?.trim());
+export function hasAdminKey(): boolean {
+  return Boolean(getAdminKey()?.trim());
 }
