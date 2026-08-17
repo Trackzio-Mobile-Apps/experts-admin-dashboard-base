@@ -1,22 +1,31 @@
+import { getAdminApp } from "@/lib/apps";
+
 /**
- * Browser session for the Coinzy admin API key.
+ * Browser session for this deploy's admin API key.
  *
  * The key lives in sessionStorage (cleared when the tab closes). Operators
  * enter it on the login page — it is never baked into the build.
  *
- * `admin_api_key:coinzy` is the storage id from the previous multi-app build.
- * We still read and clear it so existing sessions are not logged out.
+ * Storage is namespaced by app id so two branded deploys never share a key.
+ * Coinzy still reads leftover keys from older builds.
  */
-const SESSION_KEY = "coinzy_admin_api_key";
-const LEGACY_PER_APP_KEY = "admin_api_key:coinzy";
+const LEGACY_COINZY_KEYS = ["coinzy_admin_api_key", "admin_api_key:coinzy"];
 
-function sessionKeys(): string[] {
-  return [SESSION_KEY, LEGACY_PER_APP_KEY];
+function sessionKey(): string {
+  return `admin_api_key:${getAdminApp().id}`;
+}
+
+function keysToRead(): string[] {
+  const current = sessionKey();
+  if (getAdminApp().id === "coinzy") {
+    return [current, ...LEGACY_COINZY_KEYS.filter((key) => key !== current)];
+  }
+  return [current];
 }
 
 export function getAdminKey(): string | null {
   if (typeof window === "undefined") return null;
-  for (const key of sessionKeys()) {
+  for (const key of keysToRead()) {
     const value = sessionStorage.getItem(key);
     if (value) return value;
   }
@@ -24,13 +33,17 @@ export function getAdminKey(): string | null {
 }
 
 export function setAdminKey(key: string): void {
-  sessionStorage.setItem(SESSION_KEY, key);
-  sessionStorage.removeItem(LEGACY_PER_APP_KEY);
+  sessionStorage.setItem(sessionKey(), key);
+  if (getAdminApp().id === "coinzy") {
+    for (const legacy of LEGACY_COINZY_KEYS) {
+      if (legacy !== sessionKey()) sessionStorage.removeItem(legacy);
+    }
+  }
 }
 
 export function clearAdminKey(): void {
   if (typeof window === "undefined") return;
-  for (const key of sessionKeys()) {
+  for (const key of keysToRead()) {
     sessionStorage.removeItem(key);
   }
 }

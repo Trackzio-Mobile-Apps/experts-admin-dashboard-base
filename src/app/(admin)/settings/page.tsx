@@ -54,16 +54,20 @@ export default function SettingsPage() {
               </dd>
             </div>
             <div>
+              <dt className="text-text-muted">Brand</dt>
+              <dd className="mt-0.5 text-sm">{app.name}</dd>
+            </div>
+            <div>
               <dt className="text-text-muted">Auth header</dt>
               <dd className="mt-0.5 font-mono text-xs">x-admin-key</dd>
             </div>
           </dl>
           <p className="text-xs text-text-muted">
-            Configure{" "}
-            <code className="rounded bg-input-bg px-1 py-0.5">
-              NEXT_PUBLIC_API_BASE_URL
-            </code>{" "}
-            in <code className="rounded bg-input-bg px-1 py-0.5">.env.local</code>
+            Brand, icon, color, and API URL come from{" "}
+            <code className="rounded bg-input-bg px-1 py-0.5">NEXT_PUBLIC_APP_*</code>{" "}
+            and{" "}
+            <code className="rounded bg-input-bg px-1 py-0.5">NEXT_PUBLIC_API_BASE_URL</code>
+            . See <code className="rounded bg-input-bg px-1 py-0.5">docs/branding-a-new-app.md</code>.
           </p>
         </Card>
 

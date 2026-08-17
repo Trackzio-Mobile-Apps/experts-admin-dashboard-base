@@ -1,5 +1,6 @@
 import * as XLSX from "xlsx";
 import type { Expert, User } from "@/types/admin-api";
+import { getAdminApp } from "@/lib/apps";
 import { completionRate } from "@/lib/expert-metrics";
 import type { PeriodReport } from "@/lib/period-report";
 import {
@@ -180,6 +181,6 @@ export function downloadPeriodReportExcel(report: PeriodReport) {
   );
   XLSX.writeFile(
     workbook,
-    `coinzy-${report.periodKey}-report-${stamp()}.xlsx`,
+    `${getAdminApp().id}-${report.periodKey}-report-${stamp()}.xlsx`,
   );
 }

@@ -13,12 +13,14 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const appName = process.env.NEXT_PUBLIC_APP_NAME?.trim() || "Coinzy";
+
 export const metadata: Metadata = {
   title: {
-    default: "Experts Admin",
-    template: "%s | Experts Admin",
+    default: `${appName} Admin`,
+    template: `%s | ${appName} Admin`,
   },
-  description: "Admin portal for Coinzy experts.",
+  description: `Admin portal for ${appName} experts.`,
 };
 
 export default function RootLayout({

@@ -17,7 +17,7 @@ export function getApiBaseUrl(): string {
 }
 
 /**
- * Authenticated fetch for the Coinzy experts admin API.
+ * Authenticated fetch for this deploy's experts admin API.
  * Every request sends `x-admin-key`. Throws {@link AdminApiError} on 401/403
  * or when the envelope has `error: true`.
  */

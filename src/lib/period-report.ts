@@ -1,4 +1,5 @@
 import type { AdminUserRequest, Expert, User } from "@/types/admin-api";
+import { getAdminApp } from "@/lib/apps";
 import {
   formatRangeLabel,
   isInRange,
@@ -310,5 +311,6 @@ export function buildPeriodReport(
 }
 
 export function reportSubject(report: PeriodReport): string {
-  return `Coinzy ${report.periodLabel.toLowerCase()} report — ${report.rangeLabel}`;
+  const brand = getAdminApp().name;
+  return `${brand} ${report.periodLabel.toLowerCase()} report — ${report.rangeLabel}`;
 }

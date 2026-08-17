@@ -1,4 +1,5 @@
 import { reportSubject, type PeriodReport } from "@/lib/period-report";
+import { getAdminApp } from "@/lib/apps";
 
 const MAX_TABLE_ROWS = 40;
 
@@ -74,7 +75,7 @@ export function buildReportEmailHtml(report: PeriodReport): string {
   <body style="margin:0;background:#f3f4f6;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;color:#111827">
     <div style="max-width:720px;margin:24px auto;background:#ffffff;border-radius:16px;overflow:hidden;border:1px solid #e5e7eb">
       <div style="background:#111827;color:#fff;padding:24px">
-        <p style="margin:0;font-size:12px;letter-spacing:.08em;text-transform:uppercase;opacity:.7">Coinzy admin</p>
+        <p style="margin:0;font-size:12px;letter-spacing:.08em;text-transform:uppercase;opacity:.7">${escapeHtml(getAdminApp().name)} admin</p>
         <h1 style="margin:8px 0 0;font-size:22px">${escapeHtml(report.periodLabel)} report</h1>
         <p style="margin:8px 0 0;opacity:.8">${escapeHtml(report.rangeLabel)}</p>
       </div>
@@ -114,7 +115,7 @@ export function buildReportEmailHtml(report: PeriodReport): string {
 
 export function buildReportEmailText(report: PeriodReport): string {
   const lines = [
-    `Coinzy ${report.periodLabel} report`,
+    `${getAdminApp().name} ${report.periodLabel} report`,
     report.rangeLabel,
     "",
     `Users who requested: ${report.summary.usersWhoRequested}`,

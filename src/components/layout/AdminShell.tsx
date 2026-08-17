@@ -7,7 +7,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useId, useState, type ReactNode } from "react";
 
-/** Primary sidebar destinations for the Coinzy admin portal. */
+/** Primary sidebar destinations for the experts admin portal. */
 const NAV: {
   href: string;
   label: string;

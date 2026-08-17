@@ -1,6 +1,6 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { darkenHex, normalizeHex, softHex } from "@/lib/color";
-import { defaultApiBaseUrl, getCoinzyApp } from "@/lib/apps";
+import { defaultApiBaseUrl, getAdminApp, slugifyAppId } from "@/lib/apps";
 
 describe("color helpers", () => {
   it("normalizes 3 and 6 digit hex", () => {
@@ -15,12 +15,50 @@ describe("color helpers", () => {
   });
 });
 
-describe("Coinzy app config", () => {
-  it("returns a single Coinzy app with a trailing-slash-free API URL", () => {
-    const app = getCoinzyApp();
+describe("admin app config", () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it("defaults to Coinzy when brand env vars are unset", () => {
+    vi.stubEnv("NEXT_PUBLIC_APP_NAME", "");
+    vi.stubEnv("NEXT_PUBLIC_APP_ICON", "");
+    vi.stubEnv("NEXT_PUBLIC_APP_COLOR", "");
+    vi.stubEnv("NEXT_PUBLIC_APP_ID", "");
+    vi.stubEnv("NEXT_PUBLIC_APP_MODELS", "");
+    vi.stubEnv("NEXT_PUBLIC_APP_SIDEBAR", "");
+
+    const app = getAdminApp();
     expect(app.id).toBe("coinzy");
     expect(app.name).toBe("Coinzy");
+    expect(app.icon).toBe("C");
     expect(app.apiBaseUrl).toBe(defaultApiBaseUrl().replace(/\/$/, ""));
     expect(app.apiBaseUrl.endsWith("/")).toBe(false);
+  });
+
+  it("reads name, icon, color, and API URL from env for another product", () => {
+    vi.stubEnv("NEXT_PUBLIC_APP_NAME", "Banknote");
+    vi.stubEnv("NEXT_PUBLIC_APP_ICON", "B");
+    vi.stubEnv("NEXT_PUBLIC_APP_COLOR", "#1d4ed8");
+    vi.stubEnv("NEXT_PUBLIC_API_BASE_URL", "https://banknote-experts-api.example.com/");
+    vi.stubEnv("NEXT_PUBLIC_APP_MODELS", "Banknote evaluation, Grading");
+
+    const app = getAdminApp();
+    expect(app.id).toBe("banknote");
+    expect(app.name).toBe("Banknote");
+    expect(app.icon).toBe("B");
+    expect(app.primary).toBe("#1d4ed8");
+    expect(app.apiBaseUrl).toBe("https://banknote-experts-api.example.com");
+    expect(app.models).toEqual(["Banknote evaluation", "Grading"]);
+  });
+
+  it("uses NEXT_PUBLIC_APP_ID when the branch name should not become the id", () => {
+    vi.stubEnv("NEXT_PUBLIC_APP_NAME", "Banknote");
+    vi.stubEnv("NEXT_PUBLIC_APP_ID", "notes-prod");
+    expect(getAdminApp().id).toBe("notes-prod");
+  });
+
+  it("slugifies names for ids", () => {
+    expect(slugifyAppId("Bank Note AI")).toBe("bank-note-ai");
   });
 });

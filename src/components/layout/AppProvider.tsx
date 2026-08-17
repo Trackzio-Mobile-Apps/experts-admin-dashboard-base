@@ -2,7 +2,7 @@
 
 import {
   applyAppTheme,
-  getCoinzyApp,
+  getAdminApp,
   type AdminApp,
 } from "@/lib/apps";
 import {
@@ -20,10 +20,10 @@ type AppContextValue = {
 const AppContext = createContext<AppContextValue | null>(null);
 
 /**
- * Applies Coinzy theme tokens on mount and exposes the single app config.
+ * Applies this deploy's theme tokens on mount and exposes brand config.
  */
 export function AppProvider({ children }: { children: ReactNode }) {
-  const app = useMemo(() => getCoinzyApp(), []);
+  const app = useMemo(() => getAdminApp(), []);
 
   useEffect(() => {
     applyAppTheme(app);
