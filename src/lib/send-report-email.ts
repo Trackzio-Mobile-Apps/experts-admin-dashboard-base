@@ -1,25 +1,28 @@
+import { publicEnv } from "@/lib/env";
+
+/** Server-only: Resend is configured for Send now / cron. */
 export function isReportEmailConfigured(): boolean {
   return Boolean(
     process.env.RESEND_API_KEY?.trim() && process.env.REPORT_FROM_EMAIL?.trim(),
   );
 }
 
+/** Server-only: scheduled weekly/monthly mail has every required secret. */
 export function isReportCronConfigured(): boolean {
   return Boolean(
     process.env.CRON_SECRET?.trim() &&
       process.env.REPORT_ADMIN_API_KEY?.trim() &&
-      (process.env.REPORT_RECIPIENT_EMAIL?.trim() ||
-        process.env.NEXT_PUBLIC_REPORT_RECIPIENT_EMAIL?.trim()) &&
+      getCronRecipient() &&
       isReportEmailConfigured(),
   );
 }
 
+/**
+ * Cron inbox. REPORT_RECIPIENT_EMAIL is the company name for this value
+ * on both the server (cron) and the UI default.
+ */
 export function getCronRecipient(): string {
-  return (
-    process.env.REPORT_RECIPIENT_EMAIL?.trim() ||
-    process.env.NEXT_PUBLIC_REPORT_RECIPIENT_EMAIL?.trim() ||
-    ""
-  );
+  return publicEnv("REPORT_RECIPIENT_EMAIL");
 }
 
 export async function sendReportEmail(opts: {

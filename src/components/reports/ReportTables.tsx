@@ -1,7 +1,7 @@
 import type { ExpertPeriodRow, UserPeriodRow } from "@/lib/period-report";
 import { Card, EmptyState } from "@/components/ui/Card";
 import { CopyId } from "@/components/ui/CopyId";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/Button";
 
 function formatWhen(value: string | null): string {
@@ -69,7 +69,7 @@ export function ReportUserTable({ users }: { users: UserPeriodRow[] }) {
                     {formatWhen(row.lastRequestAt)}
                   </td>
                   <td className="px-4 py-3 text-right sm:px-6">
-                    <Link href={`/users/${row.userId}`}>
+                    <Link to={`/users/${row.userId}`}>
                       <Button variant="ghost" size="sm">
                         View
                       </Button>
@@ -141,7 +141,7 @@ export function ReportExpertTable({ experts }: { experts: ExpertPeriodRow[] }) {
                       : `${row.avgCompletionHours}h`}
                   </td>
                   <td className="px-4 py-3 text-right sm:px-6">
-                    <Link href={`/experts/${row.expertId}`}>
+                    <Link to={`/experts/${row.expertId}`}>
                       <Button variant="ghost" size="sm">
                         View
                       </Button>

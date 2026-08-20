@@ -1,5 +1,3 @@
-"use client";
-
 import { useAdminKey } from "@/components/layout/AdminAuthGuard";
 import { Button } from "@/components/ui/Button";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";

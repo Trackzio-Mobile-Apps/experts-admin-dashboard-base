@@ -1,0 +1,102 @@
+@import "./colors.css";
+@import "tailwindcss";
+
+@theme inline {
+  --color-canvas: var(--brand-canvas);
+  --color-surface: var(--brand-surface);
+  --color-primary: var(--brand-primary);
+  --color-primary-hover: var(--brand-primary-hover);
+  --color-primary-active: var(--brand-primary-active);
+  --color-primary-soft: var(--brand-primary-soft);
+  --color-text: var(--brand-text);
+  --color-text-muted: var(--brand-text-muted);
+  --color-border: var(--brand-border);
+  --color-input-bg: var(--brand-input-bg);
+  --color-input-border: var(--brand-input-border);
+  --color-logo-bg: var(--brand-logo-bg);
+  --color-logo-accent: var(--brand-logo-accent);
+  --color-success-ring: var(--brand-success-ring);
+  --color-success-check: var(--brand-success-check);
+
+  --color-expert-sidebar: var(--brand-expert-sidebar);
+  --color-expert-sidebar-foreground: var(--brand-expert-sidebar-foreground);
+  --color-expert-sidebar-muted: var(--brand-expert-sidebar-muted);
+  --color-expert-dashboard-canvas: var(--brand-expert-dashboard-canvas);
+  --color-expert-nav-badge: var(--brand-expert-nav-badge);
+  --color-expert-available: var(--brand-expert-available);
+  --color-expert-status-active: var(--brand-expert-status-active);
+  --color-expert-status-inactive: var(--brand-expert-status-inactive);
+
+  --color-expert-action-green: var(--brand-expert-action-green);
+  --color-expert-action-green-hover: var(--brand-expert-action-green-hover);
+  --color-expert-action-green-soft: var(--brand-expert-action-green-soft);
+  --color-expert-action-green-text: var(--brand-expert-action-green-text);
+  --color-expert-action-green-ring: var(--brand-expert-action-green-ring);
+
+  --color-expert-action-blue: var(--brand-expert-action-blue);
+  --color-expert-action-blue-hover: var(--brand-expert-action-blue-hover);
+  --color-expert-action-blue-soft: var(--brand-expert-action-blue-soft);
+  --color-expert-action-blue-text: var(--brand-expert-action-blue-text);
+  --color-expert-action-blue-ring: var(--brand-expert-action-blue-ring);
+
+  --color-expert-action-amber: var(--brand-expert-action-amber);
+  --color-expert-action-amber-hover: var(--brand-expert-action-amber-hover);
+  --color-expert-action-amber-soft: var(--brand-expert-action-amber-soft);
+  --color-expert-action-amber-text: var(--brand-expert-action-amber-text);
+  --color-expert-action-amber-ring: var(--brand-expert-action-amber-ring);
+
+  --color-expert-action-orange: var(--brand-expert-action-orange);
+  --color-expert-action-orange-hover: var(--brand-expert-action-orange-hover);
+
+  --color-expert-badge-neutral: var(--brand-expert-badge-neutral);
+  --color-expert-badge-neutral-text: var(--brand-expert-badge-neutral-text);
+  --color-expert-badge-neutral-ring: var(--brand-expert-badge-neutral-ring);
+
+  --color-expert-error: var(--brand-expert-error);
+  --color-expert-error-soft: var(--brand-expert-error-soft);
+
+  --color-expert-status-draft-bg: var(--brand-expert-status-draft-bg);
+  --color-expert-status-draft-text: var(--brand-expert-status-draft-text);
+  --color-expert-status-new-bg: var(--brand-expert-status-new-bg);
+  --color-expert-status-new-text: var(--brand-expert-status-new-text);
+  --color-expert-status-done-bg: var(--brand-expert-status-done-bg);
+  --color-expert-status-done-text: var(--brand-expert-status-done-text);
+  --color-expert-status-expired-bg: var(--brand-expert-status-expired-bg);
+  --color-expert-status-expired-text: var(--brand-expert-status-expired-text);
+
+  --color-expert-draft-banner: var(--brand-expert-draft-banner);
+  --color-expert-draft-banner-border: var(--brand-expert-draft-banner-border);
+  --color-expert-draft-banner-text: var(--brand-expert-draft-banner-text);
+
+  --color-admin-sidebar: var(--brand-admin-sidebar);
+  --color-admin-sidebar-foreground: var(--brand-admin-sidebar-foreground);
+  --color-admin-sidebar-muted: var(--brand-admin-sidebar-muted);
+  --color-admin-canvas: var(--brand-admin-canvas);
+
+  --color-success: var(--brand-success);
+  --color-success-soft: var(--brand-success-soft);
+  --color-success-text: var(--brand-success-text);
+  --color-warning: var(--brand-warning);
+  --color-warning-soft: var(--brand-warning-soft);
+  --color-warning-text: var(--brand-warning-text);
+  --color-danger: var(--brand-danger);
+  --color-danger-soft: var(--brand-danger-soft);
+  --color-danger-text: var(--brand-danger-text);
+  --color-info: var(--brand-info);
+  --color-info-soft: var(--brand-info-soft);
+  --color-info-text: var(--brand-info-text);
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+:root {
+  --font-geist-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-geist-mono: "Geist Mono", ui-monospace, monospace;
+}
+
+body {
+  background: var(--brand-canvas);
+  color: var(--brand-text);
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+}

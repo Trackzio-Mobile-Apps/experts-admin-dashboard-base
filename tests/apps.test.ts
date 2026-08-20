@@ -21,12 +21,12 @@ describe("admin app config", () => {
   });
 
   it("defaults to Coinzy when brand env vars are unset", () => {
-    vi.stubEnv("NEXT_PUBLIC_APP_NAME", "");
-    vi.stubEnv("NEXT_PUBLIC_APP_ICON", "");
-    vi.stubEnv("NEXT_PUBLIC_APP_COLOR", "");
-    vi.stubEnv("NEXT_PUBLIC_APP_ID", "");
-    vi.stubEnv("NEXT_PUBLIC_APP_MODELS", "");
-    vi.stubEnv("NEXT_PUBLIC_APP_SIDEBAR", "");
+    vi.stubEnv("APP_NAME", "");
+    vi.stubEnv("APP_ICON", "");
+    vi.stubEnv("APP_COLOR", "");
+    vi.stubEnv("APP_ID", "");
+    vi.stubEnv("APP_MODELS", "");
+    vi.stubEnv("APP_SIDEBAR", "");
 
     const app = getAdminApp();
     expect(app.id).toBe("coinzy");
@@ -37,11 +37,11 @@ describe("admin app config", () => {
   });
 
   it("reads name, icon, color, and API URL from env for another product", () => {
-    vi.stubEnv("NEXT_PUBLIC_APP_NAME", "Banknote");
-    vi.stubEnv("NEXT_PUBLIC_APP_ICON", "B");
-    vi.stubEnv("NEXT_PUBLIC_APP_COLOR", "#1d4ed8");
-    vi.stubEnv("NEXT_PUBLIC_API_BASE_URL", "https://banknote-experts-api.example.com/");
-    vi.stubEnv("NEXT_PUBLIC_APP_MODELS", "Banknote evaluation, Grading");
+    vi.stubEnv("APP_NAME", "Banknote");
+    vi.stubEnv("APP_ICON", "B");
+    vi.stubEnv("APP_COLOR", "#1d4ed8");
+    vi.stubEnv("API_BASE_URL", "https://banknote-experts-api.example.com/");
+    vi.stubEnv("APP_MODELS", "Banknote evaluation, Grading");
 
     const app = getAdminApp();
     expect(app.id).toBe("banknote");
@@ -52,9 +52,9 @@ describe("admin app config", () => {
     expect(app.models).toEqual(["Banknote evaluation", "Grading"]);
   });
 
-  it("uses NEXT_PUBLIC_APP_ID when the branch name should not become the id", () => {
-    vi.stubEnv("NEXT_PUBLIC_APP_NAME", "Banknote");
-    vi.stubEnv("NEXT_PUBLIC_APP_ID", "notes-prod");
+  it("uses APP_ID when the branch name should not become the id", () => {
+    vi.stubEnv("APP_NAME", "Banknote");
+    vi.stubEnv("APP_ID", "notes-prod");
     expect(getAdminApp().id).toBe("notes-prod");
   });
 

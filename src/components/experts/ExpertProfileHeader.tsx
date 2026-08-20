@@ -6,7 +6,6 @@ export function ExpertProfileHeader({ expert }: { expert: Expert }) {
   return (
     <div className="mb-6 flex flex-col gap-4 rounded-2xl border border-border bg-surface p-5 shadow-sm sm:flex-row sm:items-center">
       {expert.profilePicture ? (
-        // eslint-disable-next-line @next/next/no-img-element
         <img
           src={expert.profilePicture}
           alt=""

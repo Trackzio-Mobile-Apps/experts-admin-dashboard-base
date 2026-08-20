@@ -1,9 +1,12 @@
-# Next.js on Netlify — OpenNext adapter is applied automatically.
-# Do not pin @netlify/plugin-nextjs unless you need a fixed version.
-# Set secrets in Netlify UI only (Site settings → Environment variables). Never commit real env files.
+# Vite SPA on Netlify. Secrets live in Site settings → Environment variables only.
 
 [build]
   command = "npm run build"
+  publish = "dist"
 
 [build.environment]
   NODE_VERSION = "20"
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"

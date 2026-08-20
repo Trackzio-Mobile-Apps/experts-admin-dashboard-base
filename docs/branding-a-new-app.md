@@ -1,6 +1,6 @@
 # Branding a new product from this codebase
 
-This admin is **white-label**. One Git repository, one Next.js app. Each product is a separate deploy with its own env vars. A running site always talks to **one** API.
+This admin is **white-label**. One Git repository, one app. Each product is a separate deploy with its own env vars. A running site always talks to **one** API.
 
 Do **not** add apps from Settings or switch products in the sidebar. That was removed on purpose so operators cannot mix backends in one browser session.
 
@@ -8,20 +8,22 @@ Do **not** add apps from Settings or switch products in the sidebar. That was re
 
 | What | Env var | Example |
 | --- | --- | --- |
-| Brand name | `NEXT_PUBLIC_APP_NAME` | `Banknote` |
-| Logo letter (1–2 chars) | `NEXT_PUBLIC_APP_ICON` | `B` |
-| Primary color (hex) | `NEXT_PUBLIC_APP_COLOR` | `#1d4ed8` |
-| Experts API base URL | `NEXT_PUBLIC_API_BASE_URL` | `https://banknote-experts-api.example.com` |
+| Brand name | `APP_NAME` | `Banknote` |
+| Logo letter (1–2 chars) | `APP_ICON` | `B` |
+| Primary color (hex) | `APP_COLOR` | `#1d4ed8` |
+| Experts API base URL | `API_BASE_URL` | `https://banknote-experts-api.example.com` |
 
 Optional:
 
 | What | Env var | Default |
 | --- | --- | --- |
-| Stable id (storage, Excel filenames) | `NEXT_PUBLIC_APP_ID` | slug of the name (`banknote`) |
-| Sidebar color | `NEXT_PUBLIC_APP_SIDEBAR` | slightly darker than primary |
-| Labels under the sidebar logo | `NEXT_PUBLIC_APP_MODELS` | empty (Coinzy keeps `Coin evaluation`) |
+| Stable id (storage, Excel filenames) | `APP_ID` | slug of the name (`banknote`) |
+| Sidebar color | `APP_SIDEBAR` | slightly darker than primary |
+| Labels under the sidebar logo | `APP_MODELS` | empty (Coinzy keeps `Coin evaluation`) |
 
-All `NEXT_PUBLIC_*` values are baked in at **build** time. After changing them in Netlify, trigger a new deploy.
+Public values are baked in at **build** time. After changing them in Netlify, trigger a new deploy.
+
+Server secrets (`RESEND_API_KEY`, `CRON_SECRET`, `REPORT_ADMIN_API_KEY`, `REPORT_FROM_EMAIL`) must never be exposed to the browser.
 
 ## Local: run another product on your machine
 
@@ -29,10 +31,10 @@ All `NEXT_PUBLIC_*` values are baked in at **build** time. After changing them i
 2. Set the four required vars, for example:
 
 ```bash
-NEXT_PUBLIC_APP_NAME=Banknote
-NEXT_PUBLIC_APP_ICON=B
-NEXT_PUBLIC_APP_COLOR=#1d4ed8
-NEXT_PUBLIC_API_BASE_URL=https://banknote-experts-api.example.com
+APP_NAME=Banknote
+APP_ICON=B
+APP_COLOR=#1d4ed8
+API_BASE_URL=https://banknote-experts-api.example.com
 ```
 
 3. Restart `npm run dev`. The login heading, sidebar, and API calls now use Banknote.
@@ -44,15 +46,15 @@ Coinzy is the default when those vars are omitted.
 Use a **new Netlify site** from the **same GitHub repo**. Same `main` branch is fine. Site-level env vars keep products isolated.
 
 1. Netlify → Add new site → Import the same repository.
-2. Build command: `npm run build` (already in `netlify.toml`).
+2. Build command: `npm run build` (already in `netlify.toml`). Publish directory: `dist`.
 3. Site settings → Environment variables, set at least:
 
 ```text
-NEXT_PUBLIC_APP_NAME=Banknote
-NEXT_PUBLIC_APP_ICON=B
-NEXT_PUBLIC_APP_COLOR=#1d4ed8
-NEXT_PUBLIC_API_BASE_URL=https://banknote-experts-api.example.com
-NEXT_PUBLIC_APP_ID=banknote
+APP_NAME=Banknote
+APP_ICON=B
+APP_COLOR=#1d4ed8
+API_BASE_URL=https://banknote-experts-api.example.com
+APP_ID=banknote
 ```
 
 4. Also set that product’s Firebase keys and, if needed, report email vars (`RESEND_API_KEY`, `REPORT_FROM_EMAIL`, `REPORT_RECIPIENT_EMAIL`, `REPORT_ADMIN_API_KEY`, `CRON_SECRET`). See `.env.production.sample`.
@@ -70,7 +72,7 @@ If you prefer one Netlify site and a Git branch per product:
 
 Code on `app/banknote` can stay identical to `main`. Only the env scope must differ. If you cherry-pick features, merge `main` into the product branch regularly so you do not fork the codebase.
 
-Set `NEXT_PUBLIC_APP_ID` explicitly when the branch name should not become the app id.
+Set `APP_ID` explicitly when the branch name should not become the app id.
 
 ## What you should not change
 
@@ -78,7 +80,7 @@ For a new product you should **not** need to fork pages, duplicate components, o
 
 Code reads branding from `getAdminApp()` in `src/lib/apps.ts`. UI (login, sidebar, theme) and reports (email subject, Excel filename, session storage) follow that config.
 
-CSS token names (`--coinzy-primary`) are internal. `applyAppTheme()` overwrites them from `NEXT_PUBLIC_APP_COLOR` at runtime.
+CSS token names (`--brand-primary`) are internal. `applyAppTheme()` overwrites them from `APP_COLOR` at runtime.
 
 ## Checklist for a new product
 

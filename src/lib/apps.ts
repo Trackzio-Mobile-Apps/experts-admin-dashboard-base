@@ -1,11 +1,11 @@
 import { darkenHex, normalizeHex, softHex } from "@/lib/color";
+import { publicEnv } from "@/lib/env";
 
 /**
  * Brand + API config for this deploy.
  *
- * One Git repo, one Next.js app. Each product (Coinzy, Banknote, …) is a
- * separate deploy of this same code. Only env vars change:
- * name, icon, color, and API URL. See `docs/branding-a-new-app.md`.
+ * One Git repo, one app. Each product is a separate deploy of the same
+ * code. Only APP_* / API_BASE_URL env vars change. See docs/branding-a-new-app.md.
  */
 export type AdminApp = {
   id: string;
@@ -27,10 +27,6 @@ const DEFAULTS = {
   models: ["Coin evaluation"],
 } as const;
 
-function env(name: string): string {
-  return process.env[name]?.trim() ?? "";
-}
-
 /** Stable id from a display name, e.g. "Bank Note" → "bank-note". */
 export function slugifyAppId(name: string): string {
   const slug = name
@@ -48,29 +44,27 @@ function parseModels(raw: string): string[] {
     .filter(Boolean);
 }
 
-/** API host used by the browser. Override with NEXT_PUBLIC_API_BASE_URL. */
+/** API host used by the browser. Override with API_BASE_URL. */
 export function defaultApiBaseUrl(): string {
-  return env("NEXT_PUBLIC_API_BASE_URL") || DEFAULTS.apiBaseUrl;
+  return publicEnv("API_BASE_URL") || DEFAULTS.apiBaseUrl;
 }
 
-/**
- * Branding for the current deploy. Reads NEXT_PUBLIC_APP_* and
- * NEXT_PUBLIC_API_BASE_URL at call time (baked in at Next.js build).
- */
+/** Branding for the current deploy. Reads APP_* at call time. */
 export function getAdminApp(): AdminApp {
-  const name = env("NEXT_PUBLIC_APP_NAME") || DEFAULTS.name;
-  const id = (env("NEXT_PUBLIC_APP_ID") || slugifyAppId(name)).toLowerCase();
-  const icon = (env("NEXT_PUBLIC_APP_ICON") || name[0] || DEFAULTS.icon)
+  const name = publicEnv("APP_NAME") || DEFAULTS.name;
+  const id = (publicEnv("APP_ID") || slugifyAppId(name)).toLowerCase();
+  const icon = (publicEnv("APP_ICON") || name[0] || DEFAULTS.icon)
     .slice(0, 2)
     .toUpperCase();
-  const primary = normalizeHex(env("NEXT_PUBLIC_APP_COLOR") || DEFAULTS.primary);
-  const sidebarRaw = env("NEXT_PUBLIC_APP_SIDEBAR");
+  const colorRaw = publicEnv("APP_COLOR");
+  const primary = normalizeHex(colorRaw || DEFAULTS.primary);
+  const sidebarRaw = publicEnv("APP_SIDEBAR");
   const sidebar = sidebarRaw
     ? normalizeHex(sidebarRaw, primary)
-    : id === DEFAULTS.id && !env("NEXT_PUBLIC_APP_COLOR")
+    : id === DEFAULTS.id && !colorRaw
       ? DEFAULTS.sidebar
       : darkenHex(primary, 0.08);
-  const modelsRaw = env("NEXT_PUBLIC_APP_MODELS");
+  const modelsRaw = publicEnv("APP_MODELS");
   const models = modelsRaw
     ? parseModels(modelsRaw)
     : id === DEFAULTS.id
@@ -88,14 +82,15 @@ export function getAdminApp(): AdminApp {
   };
 }
 
-/** Pushes brand colors onto :root so Tailwind tokens (`primary`, sidebar) match this deploy. */
+/** Apply brand colors to :root so Tailwind tokens match this deploy. */
 export function applyAppTheme(app: AdminApp): void {
   if (typeof document === "undefined") return;
   const root = document.documentElement;
   root.dataset.app = app.id;
-  root.style.setProperty("--coinzy-primary", app.primary);
-  root.style.setProperty("--coinzy-primary-hover", darkenHex(app.primary, 0.12));
-  root.style.setProperty("--coinzy-primary-active", darkenHex(app.primary, 0.2));
-  root.style.setProperty("--coinzy-primary-soft", softHex(app.primary));
-  root.style.setProperty("--coinzy-expert-sidebar", app.sidebar);
+  root.style.setProperty("--brand-primary", app.primary);
+  root.style.setProperty("--brand-primary-hover", darkenHex(app.primary, 0.12));
+  root.style.setProperty("--brand-primary-active", darkenHex(app.primary, 0.2));
+  root.style.setProperty("--brand-primary-soft", softHex(app.primary));
+  root.style.setProperty("--brand-expert-sidebar", app.sidebar);
+  document.title = `${app.name} Admin`;
 }

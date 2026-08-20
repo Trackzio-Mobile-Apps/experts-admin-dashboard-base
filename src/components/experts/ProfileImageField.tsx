@@ -1,5 +1,3 @@
-"use client";
-
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { isFirebaseConfigured } from "@/lib/firebase";
@@ -44,7 +42,7 @@ export function ProfileImageField({
 
     if (!firebaseReady) {
       setUploadError(
-        "Firebase is not configured. Add NEXT_PUBLIC_FIREBASE_* env vars.",
+        "Firebase is not configured. Add FIREBASE_* env vars.",
       );
       return;
     }
@@ -71,7 +69,6 @@ export function ProfileImageField({
       <div className="flex flex-wrap items-start gap-3">
         <div className="h-20 w-20 shrink-0 overflow-hidden rounded-xl border border-border bg-input-bg">
           {value.trim() ? (
-            // eslint-disable-next-line @next/next/no-img-element
             <img
               src={value.trim()}
               alt="Expert profile preview"

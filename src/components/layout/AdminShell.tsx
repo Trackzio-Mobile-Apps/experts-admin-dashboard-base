@@ -1,10 +1,7 @@
-"use client";
-
 import { useLogout } from "@/components/layout/AdminAuthGuard";
 import { AppMark } from "@/components/layout/AppMark";
 import { useApp } from "@/components/layout/AppProvider";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { Link, useLocation } from "react-router-dom";
 import { useCallback, useEffect, useId, useState, type ReactNode } from "react";
 
 /** Primary sidebar destinations for the experts admin portal. */
@@ -96,7 +93,7 @@ type NavInnerProps = {
 };
 
 function NavInner({ onNavigate, onLogout }: NavInnerProps) {
-  const pathname = usePathname();
+  const { pathname } = useLocation();
   const { app } = useApp();
 
   return (
@@ -144,7 +141,7 @@ function NavInner({ onNavigate, onLogout }: NavInnerProps) {
           return (
             <Link
               key={item.href}
-              href={item.href}
+              to={item.href}
               onClick={() => onNavigate?.()}
               className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-colors ${
                 active
@@ -184,7 +181,7 @@ function DesktopSidebar({ onLogout }: { onLogout: () => void }) {
 
 export function AdminShell({ children }: { children: ReactNode }) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const pathname = usePathname();
+  const { pathname } = useLocation();
   const menuId = useId();
   const logout = useLogout();
 

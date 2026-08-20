@@ -1,20 +1,18 @@
-"use client";
-
 import { AdminApiError } from "@/lib/api-client";
 import { clearAdminKey } from "@/lib/auth";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "react-router-dom";
 import { useCallback } from "react";
 
 /** Shared API error handler: expired/invalid keys kick the operator back to login. */
 export function useApiHandler() {
-  const router = useRouter();
+  const navigate = useNavigate();
 
   return useCallback(
     (err: unknown, onError?: (message: string) => void) => {
       if (err instanceof AdminApiError) {
         if (err.status === 401 || err.status === 403) {
           clearAdminKey();
-          router.push("/login");
+          navigate("/login");
           return;
         }
         onError?.(err.message);
@@ -24,6 +22,6 @@ export function useApiHandler() {
         err instanceof Error ? err.message : "Something went wrong",
       );
     },
-    [router],
+    [navigate],
   );
 }

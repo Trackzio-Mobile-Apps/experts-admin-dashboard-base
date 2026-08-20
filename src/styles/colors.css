@@ -1,98 +1,98 @@
 /**
- * Coinzy — design tokens (single source of truth for color).
- * Synced with coinzy-experts-webapp/src/styles/colors.css
+ * Brand design tokens (single source of truth for color).
+ * Override primary tokens at runtime via applyAppTheme()
  */
 :root {
   /* ── Brand & surfaces ─────────────────────────────────────────── */
-  --coinzy-canvas: #f5f3f0;
-  --coinzy-surface: #ffffff;
-  --coinzy-primary: #7c3c3f;
-  --coinzy-primary-hover: #682f2f;
-  --coinzy-primary-active: #5a2929;
-  --coinzy-primary-soft: #f3e8e8;
-  --coinzy-text: #111111;
-  --coinzy-text-muted: #6b7280;
-  --coinzy-border: #e5e2dc;
-  --coinzy-input-bg: #f9fafb;
-  --coinzy-input-border: #e6e9eb;
-  --coinzy-logo-bg: #1c1917;
-  --coinzy-logo-accent: #4ade80;
-  --coinzy-success-ring: #e8f5e9;
-  --coinzy-success-check: #2e7d32;
+  --brand-canvas: #f5f3f0;
+  --brand-surface: #ffffff;
+  --brand-primary: #7c3c3f;
+  --brand-primary-hover: #682f2f;
+  --brand-primary-active: #5a2929;
+  --brand-primary-soft: #f3e8e8;
+  --brand-text: #111111;
+  --brand-text-muted: #6b7280;
+  --brand-border: #e5e2dc;
+  --brand-input-bg: #f9fafb;
+  --brand-input-border: #e6e9eb;
+  --brand-logo-bg: #1c1917;
+  --brand-logo-accent: #4ade80;
+  --brand-success-ring: #e8f5e9;
+  --brand-success-check: #2e7d32;
 
   /* ── Expert panel chrome (sidebar) ────────────────────────────── */
-  --coinzy-expert-sidebar: #823f42;
-  --coinzy-expert-sidebar-foreground: #f8f6f4;
-  --coinzy-expert-sidebar-muted: rgba(248, 246, 244, 0.65);
-  --coinzy-expert-dashboard-canvas: #f6f7f8;
-  --coinzy-expert-nav-badge: #f97316;
-  --coinzy-expert-available: #22c55e;
-  --coinzy-expert-status-active: #4ade80;
-  --coinzy-expert-status-inactive: #fbbf24;
+  --brand-expert-sidebar: #823f42;
+  --brand-expert-sidebar-foreground: #f8f6f4;
+  --brand-expert-sidebar-muted: rgba(248, 246, 244, 0.65);
+  --brand-expert-dashboard-canvas: #f6f7f8;
+  --brand-expert-nav-badge: #f97316;
+  --brand-expert-available: #22c55e;
+  --brand-expert-status-active: #4ade80;
+  --brand-expert-status-inactive: #fbbf24;
 
   /* ── Expert actions: green ────────────────────────────────────── */
-  --coinzy-expert-action-green: #16a34a;
-  --coinzy-expert-action-green-hover: #15803d;
-  --coinzy-expert-action-green-soft: #e8f8ef;
-  --coinzy-expert-action-green-text: #166534;
-  --coinzy-expert-action-green-ring: rgba(22, 163, 74, 0.22);
+  --brand-expert-action-green: #16a34a;
+  --brand-expert-action-green-hover: #15803d;
+  --brand-expert-action-green-soft: #e8f8ef;
+  --brand-expert-action-green-text: #166534;
+  --brand-expert-action-green-ring: rgba(22, 163, 74, 0.22);
 
   /* ── Expert actions: blue ───────────────────────────────────────── */
-  --coinzy-expert-action-blue: #3b82f6;
-  --coinzy-expert-action-blue-hover: #2563eb;
-  --coinzy-expert-action-blue-soft: #eff6ff;
-  --coinzy-expert-action-blue-text: #1d4ed8;
-  --coinzy-expert-action-blue-ring: rgba(59, 130, 246, 0.25);
+  --brand-expert-action-blue: #3b82f6;
+  --brand-expert-action-blue-hover: #2563eb;
+  --brand-expert-action-blue-soft: #eff6ff;
+  --brand-expert-action-blue-text: #1d4ed8;
+  --brand-expert-action-blue-ring: rgba(59, 130, 246, 0.25);
 
   /* ── Expert actions: amber ────────────────────────────────────── */
-  --coinzy-expert-action-amber: #eab308;
-  --coinzy-expert-action-amber-hover: #ca8a04;
-  --coinzy-expert-action-amber-soft: #fef3c7;
-  --coinzy-expert-action-amber-text: #92400e;
-  --coinzy-expert-action-amber-ring: rgba(234, 179, 8, 0.45);
+  --brand-expert-action-amber: #eab308;
+  --brand-expert-action-amber-hover: #ca8a04;
+  --brand-expert-action-amber-soft: #fef3c7;
+  --brand-expert-action-amber-text: #92400e;
+  --brand-expert-action-amber-ring: rgba(234, 179, 8, 0.45);
 
   /* ── Expert actions: orange ─────────────────────────────────────── */
-  --coinzy-expert-action-orange: #c2620e;
-  --coinzy-expert-action-orange-hover: #a4520b;
+  --brand-expert-action-orange: #c2620e;
+  --brand-expert-action-orange-hover: #a4520b;
 
   /* ── Expert badges & status pills ───────────────────────────────── */
-  --coinzy-expert-badge-neutral: #eef6ff;
-  --coinzy-expert-badge-neutral-text: #51a2ff;
-  --coinzy-expert-badge-neutral-ring: rgba(81, 162, 255, 0.25);
-  --coinzy-expert-status-draft-bg: #f3f4f6;
-  --coinzy-expert-status-draft-text: #4b5563;
-  --coinzy-expert-status-new-bg: #fef9c3;
-  --coinzy-expert-status-new-text: #a16207;
-  --coinzy-expert-status-done-bg: #ecfdf5;
-  --coinzy-expert-status-done-text: #15803d;
-  --coinzy-expert-status-expired-bg: #fff1eb;
-  --coinzy-expert-status-expired-text: #c2410c;
-  --coinzy-expert-error: #dc2626;
-  --coinzy-expert-error-soft: #fef2f2;
-  --coinzy-expert-draft-banner: #ecfdf5;
-  --coinzy-expert-draft-banner-border: #bbf7d0;
-  --coinzy-expert-draft-banner-text: #166534;
-  --coinzy-expert-queue-accent-blue: var(--coinzy-expert-action-blue);
-  --coinzy-expert-queue-accent-green: var(--coinzy-expert-action-green);
-  --coinzy-expert-draft-accent: var(--coinzy-expert-action-amber);
+  --brand-expert-badge-neutral: #eef6ff;
+  --brand-expert-badge-neutral-text: #51a2ff;
+  --brand-expert-badge-neutral-ring: rgba(81, 162, 255, 0.25);
+  --brand-expert-status-draft-bg: #f3f4f6;
+  --brand-expert-status-draft-text: #4b5563;
+  --brand-expert-status-new-bg: #fef9c3;
+  --brand-expert-status-new-text: #a16207;
+  --brand-expert-status-done-bg: #ecfdf5;
+  --brand-expert-status-done-text: #15803d;
+  --brand-expert-status-expired-bg: #fff1eb;
+  --brand-expert-status-expired-text: #c2410c;
+  --brand-expert-error: #dc2626;
+  --brand-expert-error-soft: #fef2f2;
+  --brand-expert-draft-banner: #ecfdf5;
+  --brand-expert-draft-banner-border: #bbf7d0;
+  --brand-expert-draft-banner-text: #166534;
+  --brand-expert-queue-accent-blue: var(--brand-expert-action-blue);
+  --brand-expert-queue-accent-green: var(--brand-expert-action-green);
+  --brand-expert-draft-accent: var(--brand-expert-action-amber);
 
   /* ── Admin portal aliases (same as expert panel) ────────────────── */
-  --coinzy-admin-sidebar: var(--coinzy-expert-sidebar);
-  --coinzy-admin-sidebar-foreground: var(--coinzy-expert-sidebar-foreground);
-  --coinzy-admin-sidebar-muted: var(--coinzy-expert-sidebar-muted);
-  --coinzy-admin-canvas: var(--coinzy-expert-dashboard-canvas);
+  --brand-admin-sidebar: var(--brand-expert-sidebar);
+  --brand-admin-sidebar-foreground: var(--brand-expert-sidebar-foreground);
+  --brand-admin-sidebar-muted: var(--brand-expert-sidebar-muted);
+  --brand-admin-canvas: var(--brand-expert-dashboard-canvas);
 
   /* ── Semantic aliases for admin UI components ─────────────────── */
-  --coinzy-success: var(--coinzy-expert-action-green);
-  --coinzy-success-soft: var(--coinzy-expert-status-done-bg);
-  --coinzy-success-text: var(--coinzy-expert-status-done-text);
-  --coinzy-warning: var(--coinzy-expert-action-amber);
-  --coinzy-warning-soft: var(--coinzy-expert-action-amber-soft);
-  --coinzy-warning-text: var(--coinzy-expert-action-amber-text);
-  --coinzy-danger: var(--coinzy-expert-error);
-  --coinzy-danger-soft: var(--coinzy-expert-error-soft);
-  --coinzy-danger-text: var(--coinzy-expert-error);
-  --coinzy-info: var(--coinzy-expert-action-blue);
-  --coinzy-info-soft: var(--coinzy-expert-action-blue-soft);
-  --coinzy-info-text: var(--coinzy-expert-action-blue-text);
+  --brand-success: var(--brand-expert-action-green);
+  --brand-success-soft: var(--brand-expert-status-done-bg);
+  --brand-success-text: var(--brand-expert-status-done-text);
+  --brand-warning: var(--brand-expert-action-amber);
+  --brand-warning-soft: var(--brand-expert-action-amber-soft);
+  --brand-warning-text: var(--brand-expert-action-amber-text);
+  --brand-danger: var(--brand-expert-error);
+  --brand-danger-soft: var(--brand-expert-error-soft);
+  --brand-danger-text: var(--brand-expert-error);
+  --brand-info: var(--brand-expert-action-blue);
+  --brand-info-soft: var(--brand-expert-action-blue-soft);
+  --brand-info-text: var(--brand-expert-action-blue-text);
 }

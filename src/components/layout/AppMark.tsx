@@ -1,5 +1,3 @@
-"use client";
-
 /** Square brand mark used on login and in the sidebar. */
 export function AppMark({
   icon,

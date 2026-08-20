@@ -1,7 +1,5 @@
-"use client";
-
 import { clearAdminKey, getAdminKey, hasAdminKey } from "@/lib/auth";
-import { usePathname, useRouter } from "next/navigation";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState, type ReactNode } from "react";
 
 /**
@@ -9,26 +7,17 @@ import { useEffect, useState, type ReactNode } from "react";
  * The API key lives in sessionStorage, so this check must run in the browser.
  */
 export function AdminAuthGuard({ children }: { children: ReactNode }) {
-  const pathname = usePathname();
-  const router = useRouter();
-  const isLogin = pathname === "/login";
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
   const [checked, setChecked] = useState(false);
 
   useEffect(() => {
-    const authed = hasAdminKey();
-
-    if (!authed && !isLogin) {
-      router.replace("/login");
+    if (!hasAdminKey()) {
+      navigate("/login", { replace: true });
       return;
     }
-
-    if (authed && isLogin) {
-      router.replace("/experts");
-      return;
-    }
-
     queueMicrotask(() => setChecked(true));
-  }, [isLogin, pathname, router]);
+  }, [pathname, navigate]);
 
   if (!checked) {
     return (
@@ -46,9 +35,9 @@ export function useAdminKey() {
 }
 
 export function useLogout() {
-  const router = useRouter();
+  const navigate = useNavigate();
   return () => {
     clearAdminKey();
-    router.push("/login");
+    navigate("/login");
   };
 }

@@ -1,5 +1,3 @@
-"use client";
-
 import { Button } from "@/components/ui/Button";
 import { FormActionField } from "@/components/ui/FormActionField";
 import { Input } from "@/components/ui/Input";

@@ -1,5 +1,3 @@
-"use client";
-
 import { Input } from "@/components/ui/Input";
 import { Select } from "@/components/ui/Select";
 import type { ExpertFilters, ExpertSortKey } from "@/lib/expert-metrics";

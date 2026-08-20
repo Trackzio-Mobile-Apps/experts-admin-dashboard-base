@@ -1,5 +1,3 @@
-"use client";
-
 import { useAdminKey } from "@/components/layout/AdminAuthGuard";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
@@ -15,7 +13,7 @@ import type {
   AllocationSummaryByStage,
   AllocationSummaryForStage,
 } from "@/types/admin-api";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { useState } from "react";
 
 const STAGE_LABELS: Record<AllocationStage, string> = {
@@ -151,7 +149,7 @@ export function ExpertAllocationLookup({ expertId, expertName }: Props) {
               </div>
             ))}
             <Link
-              href={`/allocation?requestId=${encodeURIComponent(requestId.trim())}`}
+              to={`/allocation?requestId=${encodeURIComponent(requestId.trim())}`}
               className="inline-block text-sm font-medium text-primary hover:underline"
             >
               Open full allocation audit →

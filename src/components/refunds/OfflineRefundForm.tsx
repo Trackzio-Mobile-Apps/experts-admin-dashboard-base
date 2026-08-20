@@ -1,5 +1,3 @@
-"use client";
-
 import { useAdminKey } from "@/components/layout/AdminAuthGuard";
 import { Button } from "@/components/ui/Button";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
@@ -7,7 +5,7 @@ import { Input } from "@/components/ui/Input";
 import { useToast } from "@/components/ui/Toast";
 import { adjustUserCredits } from "@/lib/admin-api";
 import { useApiHandler } from "@/lib/useApiHandler";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 
 function offlineRefundReason(requestId: string) {
@@ -18,7 +16,7 @@ export function OfflineRefundForm() {
   const adminKey = useAdminKey();
   const handleApiError = useApiHandler();
   const { showToast } = useToast();
-  const searchParams = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   const [userId, setUserId] = useState("");
   const [requestId, setRequestId] = useState("");

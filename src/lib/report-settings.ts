@@ -1,5 +1,7 @@
 import { getAdminApp } from "@/lib/apps";
+import { publicEnv } from "@/lib/env";
 
+/** Per-product localStorage key so branded deploys do not share an inbox. */
 function storageKey(): string {
   return `admin_report_recipient_email:${getAdminApp().id}`;
 }
@@ -7,7 +9,7 @@ function storageKey(): string {
 const LEGACY_COINZY_KEY = "coinzy_report_recipient_email";
 
 export function getDefaultReportRecipient(): string {
-  return process.env.NEXT_PUBLIC_REPORT_RECIPIENT_EMAIL?.trim() ?? "";
+  return publicEnv("REPORT_RECIPIENT_EMAIL");
 }
 
 export function getSavedReportRecipient(): string {

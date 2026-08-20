@@ -1,0 +1,4 @@
+/api/reports/email  /.netlify/functions/reports-email  200
+/api/reports/status /.netlify/functions/reports-status 200
+/api/reports/cron   /.netlify/functions/reports-cron   200
+/*    /index.html   200

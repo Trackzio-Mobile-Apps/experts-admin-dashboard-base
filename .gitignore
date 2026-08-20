@@ -11,12 +11,17 @@
 # testing
 /coverage
 
-# next.js
-/.next/
-/out/
-
 # production
+/dist
 /build
+
+# generated Netlify report APIs (emitted by vite build)
+/netlify/functions/reports-email.js
+/netlify/functions/reports-status.js
+/netlify/functions/reports-cron.js
+/netlify/functions/reports-email.js.map
+/netlify/functions/reports-status.js.map
+/netlify/functions/reports-cron.js.map
 
 # misc
 .DS_Store

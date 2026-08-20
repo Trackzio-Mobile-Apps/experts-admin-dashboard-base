@@ -1,5 +1,6 @@
 import { initializeApp, getApps, type FirebaseApp } from "firebase/app";
 import { getStorage, type FirebaseStorage } from "firebase/storage";
+import { publicEnv } from "@/lib/env";
 
 export type FirebaseWebConfig = {
   apiKey: string;
@@ -11,16 +12,21 @@ export type FirebaseWebConfig = {
   measurementId?: string;
 };
 
+let cachedConfig: FirebaseWebConfig | null | undefined;
+let app: FirebaseApp | null = null;
+let storage: FirebaseStorage | null = null;
+
+/** Firebase web config from FIREBASE_* . Null if any required key is missing. */
 export function getFirebaseWebConfig(): FirebaseWebConfig | null {
-  const apiKey = process.env.NEXT_PUBLIC_FIREBASE_API_KEY?.trim();
-  const authDomain = process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN?.trim();
-  const projectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID?.trim();
-  const storageBucket = process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET?.trim();
-  const messagingSenderId =
-    process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID?.trim();
-  const appId = process.env.NEXT_PUBLIC_FIREBASE_APP_ID?.trim();
-  const measurementId =
-    process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID?.trim();
+  if (cachedConfig !== undefined) return cachedConfig;
+
+  const apiKey = publicEnv("FIREBASE_API_KEY");
+  const authDomain = publicEnv("FIREBASE_AUTH_DOMAIN");
+  const projectId = publicEnv("FIREBASE_PROJECT_ID");
+  const storageBucket = publicEnv("FIREBASE_STORAGE_BUCKET");
+  const messagingSenderId = publicEnv("FIREBASE_MESSAGING_SENDER_ID");
+  const appId = publicEnv("FIREBASE_APP_ID");
+  const measurementId = publicEnv("FIREBASE_MEASUREMENT_ID");
 
   if (
     !apiKey ||
@@ -30,10 +36,11 @@ export function getFirebaseWebConfig(): FirebaseWebConfig | null {
     !messagingSenderId ||
     !appId
   ) {
-    return null;
+    cachedConfig = null;
+    return cachedConfig;
   }
 
-  return {
+  cachedConfig = {
     apiKey,
     authDomain,
     projectId,
@@ -42,20 +49,18 @@ export function getFirebaseWebConfig(): FirebaseWebConfig | null {
     appId,
     ...(measurementId ? { measurementId } : {}),
   };
+  return cachedConfig;
 }
 
 export function isFirebaseConfigured(): boolean {
   return getFirebaseWebConfig() !== null;
 }
 
-let app: FirebaseApp | null = null;
-let storage: FirebaseStorage | null = null;
-
 export function getFirebaseApp(): FirebaseApp {
   const config = getFirebaseWebConfig();
   if (!config) {
     throw new Error(
-      "Firebase is not configured. Add NEXT_PUBLIC_FIREBASE_* env vars.",
+      "Firebase is not configured. Add FIREBASE_* env vars.",
     );
   }
 

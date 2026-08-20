@@ -1,18 +1,17 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
+import { MemoryRouter } from "react-router-dom";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import LoginPage from "@/app/login/page";
+import LoginPage from "@/pages/LoginPage";
 import { AppProvider } from "@/components/layout/AppProvider";
-
-vi.mock("next/navigation", () => ({
-  useRouter: () => ({ push: vi.fn(), replace: vi.fn() }),
-}));
 
 function renderLogin() {
   return render(
-    <AppProvider>
-      <LoginPage />
-    </AppProvider>,
+    <MemoryRouter>
+      <AppProvider>
+        <LoginPage />
+      </AppProvider>
+    </MemoryRouter>,
   );
 }
 

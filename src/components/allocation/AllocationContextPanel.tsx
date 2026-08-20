@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -94,7 +94,7 @@ export function AllocationContextPanel({ request, user }: Props) {
             </div>
           </dl>
           <div className="mt-4">
-            <Link href={`/users/${user._id}`}>
+            <Link to={`/users/${user._id}`}>
               <Button variant="secondary" size="sm">
                 Manage user
               </Button>
