@@ -23,8 +23,6 @@ Optional:
 
 Public values are baked in at **build** time. After changing them in Netlify, trigger a new deploy.
 
-Server secrets (`RESEND_API_KEY`, `CRON_SECRET`, `REPORT_ADMIN_API_KEY`, `REPORT_FROM_EMAIL`) must never be exposed to the browser.
-
 ## Local: run another product on your machine
 
 1. Copy `.env.sample` to `.env.local` (or a second file you load yourself).
@@ -57,7 +55,7 @@ API_BASE_URL=https://banknote-experts-api.example.com
 APP_ID=banknote
 ```
 
-4. Also set that product’s Firebase keys and, if needed, report email vars (`RESEND_API_KEY`, `REPORT_FROM_EMAIL`, `REPORT_RECIPIENT_EMAIL`, `REPORT_ADMIN_API_KEY`, `CRON_SECRET`). See `.env.production.sample`.
+4. Also set that product’s Firebase keys. Optional: `REPORT_RECIPIENT_EMAIL` as the default inbox on Reports. See `.env.production.sample`.
 5. Deploy. Give the site its own domain (e.g. `banknote-admin.example.com`).
 
 Coinzy’s existing site keeps its own env vars. The two sites do not share session keys.

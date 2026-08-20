@@ -4,13 +4,12 @@ import { fileURLToPath } from "node:url";
 import { defineConfig } from "vitest/config";
 import { PUBLIC_ENV_PREFIXES } from "./src/lib/env-keys";
 import { definePublicEnv } from "./vite.env";
-import { reportsApiPlugin } from "./vite.reports-api";
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const src = path.resolve(root, "src");
 
 export default defineConfig(({ mode }) => ({
-  plugins: [react(), reportsApiPlugin(root, src)],
+  plugins: [react()],
   resolve: {
     alias: { "@": src },
   },

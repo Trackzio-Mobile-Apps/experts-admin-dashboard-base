@@ -2,7 +2,7 @@ import type { PublicEnvName } from "@/lib/env-keys";
 
 /**
  * Read a company env value (APP_*, API_BASE_URL, FIREBASE_*, …).
- * Browser: inlined at build. Netlify functions: process.env of the same name.
+ * Browser: inlined at build. Tests/Node: process.env of the same name.
  */
 function trim(value: unknown): string {
   return typeof value === "string" ? value.trim() : "";

@@ -1,7 +1,7 @@
 import { loadEnv } from "vite";
 import { PUBLIC_ENV_KEYS } from "./src/lib/env-keys";
 
-/** Inline only the public whitelist so secrets never reach the browser or function bundle. */
+/** Inline only the public whitelist so secrets never reach the browser bundle. */
 export function definePublicEnv(
   root: string,
   mode: string,

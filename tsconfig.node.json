@@ -14,5 +14,5 @@
     "noFallthroughCasesInSwitch": true,
     "types": ["node"]
   },
-  "include": ["vite.config.ts", "vite.reports-api.ts", "vite.env.ts", "src/lib/env-keys.ts"]
+  "include": ["vite.config.ts", "vite.env.ts", "src/lib/env-keys.ts"]
 }

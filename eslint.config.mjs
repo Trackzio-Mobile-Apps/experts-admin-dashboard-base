@@ -8,7 +8,6 @@ import { defineConfig, globalIgnores } from "eslint/config";
 export default defineConfig([
   globalIgnores([
     "dist/**",
-    "netlify/functions/reports-*.js",
     "coverage/**",
     "node_modules/**",
   ]),

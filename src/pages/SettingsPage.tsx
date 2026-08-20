@@ -93,8 +93,8 @@ export default function SettingsPage() {
 
       <Card title="Weekly & monthly report email" className="mt-6">
         <p className="mb-4 text-sm text-text-muted">
-          Inbox for Send now from Reports. Automatic Monday/monthly emails
-          also need the Netlify env vars listed on the Reports page.
+          Inbox used as the To address when you email a report from the
+          Reports page. Saved on this device only.
         </p>
         <div className="space-y-4">
           <Input

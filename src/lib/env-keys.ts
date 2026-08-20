@@ -1,9 +1,7 @@
 /**
  * Client-safe env names (company standard).
  *
- * Only these keys are injected into the browser bundle. Secrets
- * (RESEND_API_KEY, CRON_SECRET, REPORT_ADMIN_API_KEY, REPORT_FROM_EMAIL)
- * stay on the server as process.env.
+ * Only these keys are injected into the browser bundle.
  */
 export const PUBLIC_ENV_KEYS = [
   "APP_NAME",
@@ -25,5 +23,5 @@ export const PUBLIC_ENV_KEYS = [
 
 export type PublicEnvName = (typeof PUBLIC_ENV_KEYS)[number];
 
-/** Prefixes Vite may load from .env files without exposing REPORT_* secrets. */
+/** Prefixes Vite may load from .env files. REPORT_RECIPIENT_EMAIL is inlined via definePublicEnv. */
 export const PUBLIC_ENV_PREFIXES = ["APP_", "API_", "FIREBASE_"] as const;

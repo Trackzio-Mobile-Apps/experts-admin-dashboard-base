@@ -121,7 +121,6 @@ export default function ReportsPage() {
           <ReportSummary summary={report.summary} />
           <div className="mb-6">
             <ReportEmailPanel
-              adminKey={adminKey}
               weeklyReport={weeklyReport}
               monthlyReport={monthlyReport}
               onToast={showToast}
