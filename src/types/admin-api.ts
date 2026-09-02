@@ -90,9 +90,9 @@ export type CreditLedger = {
 
 export type AdminRequest = {
   _id: string;
-  displayId: string;
+  displayId: string | null;
   coinTitle: string | null;
-  userId: string;
+  userId: string | null;
   country: string;
   payload: {
     media?: {
@@ -103,21 +103,23 @@ export type AdminRequest = {
     };
   };
   status: string;
-  creditLedgerId: string;
+  creditLedgerId: string | null;
   assignedExpertId: string | null;
   previousExpertIds: string[];
-  internalExpertId: string;
+  internalExpertId: string | null;
   allocationRound: number;
   isAdminCreated: boolean;
-  firstAcceptanceWindowEndsAt: string;
-  ttlExpiresAt: string;
-  deadlineAt: string;
+  firstAcceptanceWindowEndsAt: string | null;
+  ttlExpiresAt: string | null;
+  deadlineAt: string | null;
   acceptedAt: string | null;
   submittedAt: string | null;
   completedAt: string | null;
   acceptedByFallback: boolean;
-  createdAt: string;
-  updatedAt: string;
+  reportId: string | null;
+  hasResult: boolean;
+  createdAt: string | null;
+  updatedAt: string | null;
 };
 
 export type AllocationSummaryRow = {

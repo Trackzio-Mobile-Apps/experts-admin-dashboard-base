@@ -2,7 +2,7 @@ import { useAdminKey } from "@/components/layout/AdminAuthGuard";
 import { UserStatsPanel } from "@/components/users/UserStatsPanel";
 import { CreditAdjustModal } from "@/components/users/CreditAdjustModal";
 import { CreateRequestModal } from "@/components/users/CreateRequestModal";
-import { Badge, statusBadgeVariant } from "@/components/ui/Badge";
+import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import {
   Card,
@@ -14,6 +14,7 @@ import { CopyId } from "@/components/ui/CopyId";
 import { useToast } from "@/components/ui/Toast";
 import { getUser } from "@/lib/admin-api";
 import { displayUserLabel, formatLastLogin, userStats } from "@/lib/user-metrics";
+import { requestStatusVariant } from "@/lib/request-status";
 import { useApiHandler } from "@/lib/useApiHandler";
 import type {
   AdminUserRequest,
@@ -22,27 +23,6 @@ import type {
 } from "@/types/admin-api";
 import { Link, useParams } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
-
-function requestStatusVariant(status: string) {
-  switch (status) {
-    case "completed":
-      return "success" as const;
-    case "deadline_missed":
-    case "expired":
-    case "cancelled":
-      return "danger" as const;
-    case "refund_pending":
-    case "refund_processing":
-    case "refunded":
-      return "warning" as const;
-    case "accepted":
-    case "report_submitted":
-    case "offered":
-      return "info" as const;
-    default:
-      return statusBadgeVariant(status);
-  }
-}
 
 export default function UserDetailPage() {
   const { id = "" } = useParams<{ id: string }>();
@@ -261,7 +241,12 @@ export default function UserDetailPage() {
                       />
                     </td>
                     <td className="px-4 py-3 font-medium sm:px-6">
-                      {request.displayId ?? "—"}
+                      <Link
+                        to={`/requests/${request._id}`}
+                        className="font-medium text-primary hover:underline"
+                      >
+                        {request.displayId ?? "—"}
+                      </Link>
                       {request.isAdminCreated ? (
                         <Badge variant="info" className="ml-2">
                           Admin
