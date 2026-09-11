@@ -65,8 +65,7 @@ export function OfflineRefundForm() {
   const confirmRestore = async () => {
     setLoading(true);
     try {
-      // Only call the working adjust API. Do not pre-check GET /admin/users/:id
-      // — that endpoint is not implemented on the backend today.
+      // Restore credits via the working adjust API.
       const result = await adjustUserCredits(adminKey, userId.trim(), {
         amount: parsedAmount,
         reason,

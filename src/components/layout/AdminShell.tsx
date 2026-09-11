@@ -16,7 +16,7 @@ const NAV: {
   { href: "/reports", label: "Reports", icon: "reports" },
   { href: "/allocation", label: "Allocation", icon: "allocation" },
   { href: "/refunds", label: "Refunds", icon: "refunds" },
-  { href: "/requests", label: "Requests", icon: "requests", comingSoon: true },
+  { href: "/requests", label: "Requests", icon: "requests" },
   { href: "/settings", label: "Settings", icon: "settings" },
 ];
 

@@ -1,8 +1,10 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   getAllocationSummary,
+  getRequest,
   listAllocationSummaries,
   listExperts,
+  listRequests,
 } from "@/lib/admin-api";
 
 describe("admin-api", () => {
@@ -95,6 +97,61 @@ describe("admin-api", () => {
     expect(summary).toMatchObject({ stage: "initial" });
     expect(fetch).toHaveBeenCalledWith(
       expect.stringContaining("stage=initial"),
+      expect.any(Object),
+    );
+  });
+
+  it("listRequests passes status and assignedExpertId filters", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        status: 200,
+        json: async () => ({
+          error: false,
+          message: null,
+          data: {
+            requests: [{ _id: "req1", status: "accepted", displayId: "EV-1" }],
+          },
+        }),
+      }),
+    );
+
+    const requests = await listRequests("key", {
+      status: "accepted",
+      assignedExpertId: "expert-1",
+    });
+    expect(requests).toHaveLength(1);
+    expect(fetch).toHaveBeenCalledWith(
+      expect.stringContaining("/admin/requests?"),
+      expect.any(Object),
+    );
+    expect(fetch).toHaveBeenCalledWith(
+      expect.stringContaining("status=accepted"),
+      expect.any(Object),
+    );
+    expect(fetch).toHaveBeenCalledWith(
+      expect.stringContaining("assignedExpertId=expert-1"),
+      expect.any(Object),
+    );
+  });
+
+  it("getRequest fetches request detail", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        status: 200,
+        json: async () => ({
+          error: false,
+          message: null,
+          data: { request: { _id: "req1", status: "offered" } },
+        }),
+      }),
+    );
+
+    const request = await getRequest("key", "req1");
+    expect(request._id).toBe("req1");
+    expect(fetch).toHaveBeenCalledWith(
+      expect.stringContaining("/admin/requests/req1"),
       expect.any(Object),
     );
   });

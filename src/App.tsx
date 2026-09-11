@@ -12,6 +12,7 @@ const ReportsPage = lazy(() => import("@/pages/ReportsPage"));
 const AllocationPage = lazy(() => import("@/pages/AllocationPage"));
 const RefundsPage = lazy(() => import("@/pages/RefundsPage"));
 const RequestsPage = lazy(() => import("@/pages/RequestsPage"));
+const RequestDetailPage = lazy(() => import("@/pages/RequestDetailPage"));
 const SettingsPage = lazy(() => import("@/pages/SettingsPage"));
 
 function RouteFallback() {
@@ -37,6 +38,7 @@ export function App() {
           <Route path="/allocation" element={<AllocationPage />} />
           <Route path="/refunds" element={<RefundsPage />} />
           <Route path="/requests" element={<RequestsPage />} />
+          <Route path="/requests/:id" element={<RequestDetailPage />} />
           <Route path="/settings" element={<SettingsPage />} />
         </Route>
         <Route path="/compare" element={<Navigate to="/reports" replace />} />

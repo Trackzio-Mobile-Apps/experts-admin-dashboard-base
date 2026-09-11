@@ -1,43 +1,110 @@
 import { OfflineRefundForm } from "@/components/refunds/OfflineRefundForm";
+import { useAdminKey } from "@/components/layout/AdminAuthGuard";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
-import { Card, LoadingState, PageHeader } from "@/components/ui/Card";
-import { Suspense } from "react";
+import {
+  Card,
+  EmptyState,
+  LoadingState,
+  PageHeader,
+} from "@/components/ui/Card";
+import { CopyId } from "@/components/ui/CopyId";
+import { useToast } from "@/components/ui/Toast";
+import { listRequests } from "@/lib/admin-api";
+import { requestStatusVariant } from "@/lib/request-status";
+import { useApiHandler } from "@/lib/useApiHandler";
+import type { AdminRequest } from "@/types/admin-api";
+import { Link } from "react-router-dom";
+import { Suspense, useEffect, useState } from "react";
 
 export default function RefundsPage() {
+  const adminKey = useAdminKey();
+  const handleApiError = useApiHandler();
+  const { showToast } = useToast();
+  const [pending, setPending] = useState<AdminRequest[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      setLoading(true);
+      try {
+        const data = await listRequests(adminKey, { status: "refund_pending" });
+        if (!cancelled) setPending(data);
+      } catch (err) {
+        handleApiError(err, (msg) => showToast(msg, "error"));
+        if (!cancelled) setPending([]);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [adminKey, handleApiError, showToast]);
+
   return (
     <>
       <PageHeader
         title="Refunds"
-        description="Handle offline refunds manually until the Refund Queue APIs ship."
+        description="Pending refund requests and the manual credit-restore flow."
       />
 
       <div className="grid gap-6 lg:grid-cols-2">
         <Card title="Refund queue">
-          <div className="flex flex-col items-center py-8 text-center">
-            <Badge variant="warning" className="mb-4">
-              Phase B — coming soon
-            </Badge>
-            <p className="max-w-md text-sm text-text-muted">
-              Approve / Reject is not implemented yet. Pending refunds will appear
-              here once backend ships{" "}
-              <code className="rounded bg-input-bg px-1.5 py-0.5 font-mono text-xs">
-                GET /admin/requests?status=refund_pending
-              </code>{" "}
-              and the approve/reject endpoints. Those routes currently return{" "}
-              <code className="rounded bg-input-bg px-1.5 py-0.5 font-mono text-xs">
-                501
-              </code>
-              .
-            </p>
-            <div className="mt-6 flex flex-wrap justify-center gap-2">
-              <Button disabled title="501 — not implemented">
-                Approve refund
-              </Button>
-              <Button variant="secondary" disabled title="501 — not implemented">
-                Reject refund
-              </Button>
-            </div>
+          {loading ? (
+            <LoadingState label="Loading pending refunds…" />
+          ) : pending.length === 0 ? (
+            <EmptyState
+              title="No pending refunds"
+              description="Requests with status refund_pending will appear here. Approve / Reject is not implemented yet."
+            />
+          ) : (
+            <ul className="space-y-3">
+              {pending.map((request) => (
+                <li
+                  key={request._id}
+                  className="rounded-xl border border-border p-3"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="font-medium">
+                        {request.displayId ?? request._id}
+                      </p>
+                      <Badge
+                        variant={requestStatusVariant(request.status)}
+                        className="mt-1"
+                      >
+                        {request.status}
+                      </Badge>
+                      <div className="mt-2">
+                        <CopyId
+                          value={request._id}
+                          label="Request Mongo ID"
+                        />
+                      </div>
+                    </div>
+                    <Link to={`/requests/${request._id}`}>
+                      <Button variant="ghost" size="sm">
+                        View
+                      </Button>
+                    </Link>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+          <p className="mt-4 text-xs text-text-muted">
+            Approve / Reject refund endpoints are still 501. Use the manual
+            restore flow until those ship.
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <Button disabled title="501 — not implemented">
+              Approve refund
+            </Button>
+            <Button variant="secondary" disabled title="501 — not implemented">
+              Reject refund
+            </Button>
           </div>
         </Card>
 
@@ -47,14 +114,6 @@ export default function RefundsPage() {
             this app, then restore credits here via{" "}
             <code className="rounded bg-input-bg px-1 py-0.5 font-mono text-xs">
               POST /admin/users/:userId/credits/adjust
-            </code>
-            . Body is only{" "}
-            <code className="rounded bg-input-bg px-1 py-0.5 font-mono text-xs">
-              amount
-            </code>{" "}
-            +{" "}
-            <code className="rounded bg-input-bg px-1 py-0.5 font-mono text-xs">
-              reason
             </code>
             . Prefill from Users → user detail → Use in refund.
           </p>
@@ -66,25 +125,12 @@ export default function RefundsPage() {
 
       <Card title="Current limitations" className="mt-6">
         <ul className="space-y-2 text-sm text-text-muted">
+          <li>✅ Lists requests with status refund_pending</li>
           <li>✅ Restores the user&apos;s credits via credit adjust</li>
           <li>
-            ✅ Leaves an audit trail through{" "}
+            ❌ Approve / Reject refund endpoints are still{" "}
             <code className="rounded bg-input-bg px-1 py-0.5 font-mono text-xs">
-              admin_adjustment
-            </code>{" "}
-            + reason (request id embedded in reason text only)
-          </li>
-          <li>
-            ❌ Does not create a{" "}
-            <code className="rounded bg-input-bg px-1 py-0.5 font-mono text-xs">
-              refund
-            </code>{" "}
-            ledger entry
-          </li>
-          <li>
-            ❌ Does not set{" "}
-            <code className="rounded bg-input-bg px-1 py-0.5 font-mono text-xs">
-              ledger.requestId
+              501
             </code>
           </li>
           <li>
@@ -94,55 +140,6 @@ export default function RefundsPage() {
             </code>
           </li>
         </ul>
-        <p className="mt-4 text-sm text-text-muted">
-          Those last items require the backend refund APIs and the planned Refund
-          Queue / Approve / Reject flow.
-        </p>
-      </Card>
-
-      <Card title="Target flow (Phase A–C)" className="mt-6">
-        <div className="space-y-4 text-sm text-text-muted">
-          <p>
-            <strong className="text-text">1.</strong> User on{" "}
-            <code className="rounded bg-input-bg px-1.5 py-0.5 font-mono text-xs">
-              deadline_missed
-            </code>{" "}
-            taps <em>Request refund</em> →{" "}
-            <code className="rounded bg-input-bg px-1.5 py-0.5 font-mono text-xs">
-              refund_pending
-            </code>
-          </p>
-          <p>
-            <strong className="text-text">2.</strong> Admin approves → +1 credit,
-            ledger type{" "}
-            <code className="rounded bg-input-bg px-1.5 py-0.5 font-mono text-xs">
-              refund
-            </code>
-            , status{" "}
-            <code className="rounded bg-input-bg px-1.5 py-0.5 font-mono text-xs">
-              refunded
-            </code>
-            , RTN{" "}
-            <code className="rounded bg-input-bg px-1.5 py-0.5 font-mono text-xs">
-              request.refunded
-            </code>
-          </p>
-          <p>
-            <strong className="text-text">3.</strong> Store money refund remains
-            manual — credit restore and store refund are separate steps.
-          </p>
-          <p>
-            Spec reference (until{" "}
-            <code className="rounded bg-input-bg px-1.5 py-0.5 font-mono text-xs">
-              public/admin/refunds.md
-            </code>{" "}
-            exists):{" "}
-            <code className="rounded bg-input-bg px-1.5 py-0.5 font-mono text-xs">
-              coinzy-experts-backend/public/mobile-user/requests.md
-            </code>{" "}
-            → Refund Handling.
-          </p>
-        </div>
       </Card>
     </>
   );

@@ -4,9 +4,11 @@ import type {
   AllocationSummaryByStage,
   AllocationSummaryForStage,
   AllocationSummaryListResponse,
+  AdminRequest,
   CreateExpertBody,
   CreateUserRequestBody,
   CreditAdjustBody,
+  CreditLedger,
   Expert,
   ExpertStatus,
   UpdateExpertBody,
@@ -108,7 +110,7 @@ export async function adjustUserCredits(
   userId: string,
   body: CreditAdjustBody,
 ) {
-  const res = await adminFetch<{ creditBalance: number; ledger: unknown }>(
+  const res = await adminFetch<{ creditBalance: number; ledger: CreditLedger }>(
     `/admin/users/${userId}/credits/adjust`,
     {
       method: "POST",
@@ -124,7 +126,7 @@ export async function createUserRequest(
   userId: string,
   body: CreateUserRequestBody,
 ) {
-  const res = await adminFetch<{ request: unknown; user: User }>(
+  const res = await adminFetch<{ request: AdminRequest; user: User }>(
     `/admin/users/${userId}/requests`,
     {
       method: "POST",
@@ -133,6 +135,41 @@ export async function createUserRequest(
     },
   );
   return res.data;
+}
+
+export type ListRequestsParams = {
+  status?: string;
+  assignedExpertId?: string;
+  userId?: string;
+  displayId?: string;
+};
+
+export async function listRequests(
+  adminKey: string,
+  params?: ListRequestsParams,
+) {
+  const search = new URLSearchParams();
+  if (params?.status?.trim()) search.set("status", params.status.trim());
+  if (params?.assignedExpertId?.trim()) {
+    search.set("assignedExpertId", params.assignedExpertId.trim());
+  }
+  if (params?.userId?.trim()) search.set("userId", params.userId.trim());
+  if (params?.displayId?.trim()) search.set("displayId", params.displayId.trim());
+
+  const query = search.toString() ? `?${search.toString()}` : "";
+  const res = await adminFetch<{ requests: AdminRequest[] }>(
+    `/admin/requests${query}`,
+    { method: "GET", ...withKey(adminKey) },
+  );
+  return res.data.requests;
+}
+
+export async function getRequest(adminKey: string, id: string) {
+  const res = await adminFetch<{ request: AdminRequest }>(
+    `/admin/requests/${id}`,
+    { method: "GET", ...withKey(adminKey) },
+  );
+  return res.data.request;
 }
 
 export async function listAllocationSummaries(

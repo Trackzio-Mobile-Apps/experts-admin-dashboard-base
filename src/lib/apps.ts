@@ -23,7 +23,7 @@ const DEFAULTS = {
   icon: "C",
   primary: "#7c3c3f",
   sidebar: "#823f42",
-  apiBaseUrl: "https://coinzy-experts-api.trackzio.com",
+  apiBaseUrl: "https://api.coinzy-experts-qa.trackzio.com",
   models: ["Coin evaluation"],
 } as const;
 
