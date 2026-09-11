@@ -8,7 +8,9 @@
   },
   "scripts": {
     "dev": "vite",
+    "dev:qa": "vite --mode qa",
     "build": "tsc --noEmit -p tsconfig.app.json && vite build",
+    "build:qa": "tsc --noEmit -p tsconfig.app.json && vite build --mode qa",
     "preview": "vite preview",
     "lint": "eslint .",
     "test": "vitest run",
